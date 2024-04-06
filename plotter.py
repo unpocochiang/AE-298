@@ -92,7 +92,7 @@ weight = 855157 #lbf
 
 # Now we initialize our values, and calculate!
 #mach = np.linspace(0.01, 0.8, 100) # Mach Number
-mach = np.array([0.1, 0.15, 0.2, 0.25, 0.3])
+mach = np.array([0.1, 0.15, 0.2, 0.25, 0.3, 0.4, 0.5,0.6,0.7])
 # altitude = np.arange(0., 55000., 5000.) # ft
 altitude = np.array([0., 5000., 10000., 15000, 20000, 25000, 30000])
 mach_size = np.size(mach)
@@ -132,9 +132,9 @@ for i, alt in enumerate(altitude):
         
         #print(f'Mach: {m}')
         print(f'reynold: {re} | CDo_wing: {CDo_wing_val[k]}')
-
+        
     # Plot each CDo_wing now that it has finished construction
-    plt.plot(mach, CDo_wing, label=f'{alt} ft', color=color_list[i])
+    plt.plot(mach, CDo_wing_val, label=f'{alt} ft', color=color_list[i])
 
 #plt.plot(0.5*np.ones(100), np.linspace(0.005, 0.03, 100), 'k--')
 plt.title('CDo_wing') # gonna do some LaTeX stuff with this in a bit, but this is a proof of concept lol
