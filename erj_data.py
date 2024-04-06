@@ -13,6 +13,7 @@ S_wing = 783 #ft^2 #APM
 S_wingtip=65 #ft^2 # side view
 S_wing_expo = 2*345.278 #ft^2
 
+s_wet = 1313.9 # ft^2
 L_c_4_wing = 22.86 #deg #c/4 - top view
 
 c_root = 16.242 #ft #top view
@@ -34,7 +35,8 @@ c_joint_y_joint= 10.405 #ft #y at joint  #top view
 m1 = (c_joint-c_root)/c_joint_y_joint
 m2=(c_tip-c_joint)/d_r_2_t
 
-c_bar = (2/S_wing)*((c_joint_y_joint^3*m1^3/3 + c_joint_y_joint^2*c_root*m1 + c_joint_y_joint*c_root^2 + ((c_joint + m2*d_r_2_t)^3-(c_joint+m2*c_joint_y_joint)^3)/(3*m2))) #ft
+#c_bar = (2/S_wing)*((c_joint_y_joint**3*m1**3/3 + c_joint_y_joint**2*c_root*m1 + c_joint_y_joint*c_root^2 + ((c_joint + m2*d_r_2_t)**3-(c_joint+m2*c_joint_y_joint)**3)/(3*m2))) #ft
+c_bar = (2/S_wing)*((c_joint_y_joint**3*m1**3/3 + c_joint_y_joint**2*c_root*m1 + c_joint_y_joint*c_root**2 + ((c_joint + m2*d_r_2_t)**3-(c_joint+m2*c_joint_y_joint)**3)/(3*m2))) #ft
 
 #Cmac_2 = c_root * (2/3)*(1 + taper + taper^2)/(1+taper)
 
@@ -86,7 +88,7 @@ S_fus_wet=3.4*(S_fus_plan_top+S_fus_plan_side)/2
 d_fus_b_side=1.298 #ft #side view
 d_fus_b_top=1.261 #ft #side view
 d_fus_b=d_fus_b_side/2+d_fus_b_top/2
-S_fus_b = d_fus_b^2*(np.pi/4) #ft2 #equation written on Roskam Fig 4.17
+S_fus_b = (d_fus_b**2)*(np.pi/4) #ft2 #equation written on Roskam Fig 4.17
 
 S_fus_maxfront = 106.421 #ft2 #front view
 
@@ -113,11 +115,11 @@ S_h_expo = 2*106.071 #ft^2 #top view only
 
 S_h_wet = S_h_expo*(1.977+0.52*tc_avg_h)# #ft2 # Eq 7.12 Raymer 6th Ed.
 
-c_bar_h  = c_root_h * (2/3)*(1 + taper_h + taper_h^2)/(1+taper_h) #ft 
+c_bar_h  = c_root_h * (2/3)*(1 + taper_h + taper_h**2)/(1+taper_h) #ft 
 
 tc_max_loc_h = .35 #top view of Vtail
 
-AR_h = b_h^2/S_h 
+AR_h = (b_h**2)/S_h 
 
 # Vertical Stab Data
 
@@ -143,7 +145,7 @@ S_v_wet = S_v_expo*(1.977+0.52*tc_avg_v)# #ft2 # Eq 7.12 Raymer 6th Ed.
 
 tc_max_loc_v =0.35 #top view
 
-c_bar_v  = c_root_v * (2/3)*(1 + taper_v + taper_v^2)/(1+taper_v) #ft
+c_bar_v  = c_root_v * (2/3)*(1 + taper_v + taper_v**2)/(1+taper_v) #ft
 
 # Nacelle Data
 

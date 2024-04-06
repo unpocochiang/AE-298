@@ -80,6 +80,7 @@ def CalcCDwave(mach,Weight,vinf,rho,Sweep,tcmax,ctip,croot,Wsref,Span):
     ka=0.95
     #
     # Calculate Lift Coefficient based on Weight and q
+    #print(f'rho={rho} | vinf={vinf} | wsref={Wsref}')
     CL=Weight/(0.5*rho*vinf*vinf*Wsref)
     #
     #
@@ -89,19 +90,20 @@ def CalcCDwave(mach,Weight,vinf,rho,Sweep,tcmax,ctip,croot,Wsref,Span):
     #
     # Calculate Mdd
     #
-    Mdd=(ka-CL/(10*(np.cos(Sweep2*np.pi/180))^2)-tcmax/(np.cos(Sweep2*np.pi/180)))/(np.cos(Sweep2*np.pi/180))
+    Mdd=(ka-CL/(10*(np.cos(Sweep2*np.pi/180))**2)-tcmax/(np.cos(Sweep2*np.pi/180)))/(np.cos(Sweep2*np.pi/180))
     #
     # Calculate Mcr
     #
-    Mcr=Mdd-(0.1/80)^(1/3)
+    Mcr=Mdd-(0.1/80)**(1/3)
     #
     # Calculate CDwave
     #
     CDwave=0
+    #print(f'mach={mach}|mcr={Mcr}')
     if (mach <= Mcr):
         CDwave=0
     if (mach > Mcr):
-        CDwave=20*((mach-Mcr)^4)
+        CDwave=20*((mach-Mcr)**4)
     CDw_vtail = CDwave
     return CDw_vtail
 

@@ -86,7 +86,7 @@ tcmax = 0.1346
 tcavg = 0.0933
 maxtcloc = 0.4
 sweep = 22.86 # degrees (converted to radians in profile_drag)
-
+weight = 855157 #lbf
 
 # from profile_drag import calCf, calcRls, CalcLparam, CalcCDow
 
@@ -118,19 +118,20 @@ for i, alt in enumerate(altitude):
 
     # Iteratively define CDo_wing w/ mach
     for k, m in enumerate(mach):
-        #print(k)
-        #print(f'm:{m}')
+        print(k)
+        print(f'm:{m}')
         re = Re(density, m, cbar, visc, temp) # float for each mach
         
         #span is b_wing
         #sweep is L_c_4_wing
         #vinf is true airspeed
         #sref and wref may be both s_wing
-        CDo_wing_val[k] = CDo_wing.CDo_wing_calc(re, mach, erj_data.L_c_4_wing, erj_data.tc_avg,sref,swet, erj_data.tc_max_loc,
-                                                Weight,vinf,rho,erj_data.tc_max,erj_data.c_tip,erj_data.c_root,Wsref,erj_data.b_wing)
+        vinf = m * speed_of_sound
+        CDo_wing_val[k] = CDo_wing.CDo_wing_calc(re, m, erj_data.L_c_4_wing, erj_data.tc_avg,erj_data.S_wing,erj_data.s_wet, erj_data.tc_max_loc,
+                                                weight,vinf,density,erj_data.tc_max,erj_data.c_tip,erj_data.c_root,erj_data.S_wing,erj_data.b_wing)
         
-        print(f'Mach: {m}')
-        print(f'reynold: {re} | cf: {cf} | rls: {rls} | CDo_wing: {CDo_wing[k]}')
+        #print(f'Mach: {m}')
+        print(f'reynold: {re} | CDo_wing: {CDo_wing_val[k]}')
 
     # Plot each CDo_wing now that it has finished construction
     plt.plot(mach, CDo_wing, label=f'{alt} ft', color=color_list[i])
