@@ -4,12 +4,13 @@ import numpy as np
 #
 ## ERJ-175
 # Flight Condition Data
-
+weight = 855157 #lbf
+rle = 0.21 #leading edge radius #ft
 #  Wing Data
 
-b_wing = 93+11/12 #ft #APM
+b_wing = 93+11/12 #ft #APM 
 
-S_wing = 783 #ft^2 #APM
+S_wing = 783 #ft^2 #APM #Span
 S_wingtip=65 #ft^2 # side view
 S_wing_expo = 2*345.278 #ft^2
 

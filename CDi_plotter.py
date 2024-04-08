@@ -1,9 +1,9 @@
-# Plots CDo_Wing
+# Plots CDi_Wing
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
-import CDo_wing
 import erj_data 
+import CDi_wing
 
 def Re(rho, u, L, mu, T):
     '''
@@ -78,16 +78,6 @@ def AtmosphereFunction(h_G):          #Atmosphere Function
     mu=mu0*(T/T0)**(1.5)*((T0+198.72)/(T+198.72))   # viscosity from temperature
     return [h_G, h, T, P, rho,a,mu]
 
-# Relevant Geometry
-cbar = 7.21 # ft
-S_wing = 783. # ft^2
-S_wet = 1313.9 # ft^2
-tcmax = 0.1346
-tcavg = 0.0933
-maxtcloc = 0.4
-sweep = 22.86 # degrees (converted to radians in profile_drag)
-weight = 855157 #lbf
-
 # from profile_drag import calCf, calcRls, CalcLparam, CalcCDow
 
 # Now we initialize our values, and calculate!
@@ -108,11 +98,9 @@ color_list = [colors_xkcd['xkcd:red'],   colors_xkcd['xkcd:orange'], colors_xkcd
 
 for i, alt in enumerate(altitude):
     # Initialize CDo_wing as array of the same size as mach
-    CDo_wing_val = np.zeros_like(mach)
-
+    CDi_wing_val = np.zeros_like(mach)
     # Define values independent of mach, as we will iteratively define CDo_wing w/ mach
     altitude, geo_alt, temp, pressure, density, speed_of_sound, visc = AtmosphereFunction(alt)
-    
 
     print(f'Altitude: {alt}')
 
@@ -120,24 +108,23 @@ for i, alt in enumerate(altitude):
     for k, m in enumerate(mach):
         print(k)
         print(f'm:{m}')
-        re = Re(density, m, cbar, visc, temp) # float for each mach
-        
         #span is b_wing
         #sweep is L_c_4_wing
         #vinf is true airspeed
         #sref and wref may be both s_wing
+        # visc is just mu #kinematic viscosity
         vinf = m * speed_of_sound
-        CDo_wing_val[k] = CDo_wing.CDo_wing_calc(re, m, erj_data.L_c_4_wing, erj_data.tc_avg,erj_data.S_wing,erj_data.s_wet, erj_data.tc_max_loc,
-                                                weight,vinf,density,erj_data.tc_max,erj_data.c_tip,erj_data.c_root,erj_data.S_wing,erj_data.b_wing)
-        
+        CDi_wing_val[k] = CDi_wing.CDi_wing_calc(m, erj_data.AR, erj_data.L_c_4_wing, erj_data.taper, density, vinf, erj_data.rle, visc, erj_data.b_wing, erj_data.c_tip, 
+                                                 erj_data.c_root, erj_data.cl_alpha, erj_data.weight, erj_data.S_wing)
+
         #print(f'Mach: {m}')
-        print(f'reynold: {re} | CDo_wing: {CDo_wing_val[k]}')
+        print(f'CDo_wing: {CDi_wing_val[k]}')
         
     # Plot each CDo_wing now that it has finished construction
-    plt.plot(mach, CDo_wing_val, label=f'{alt} ft', color=color_list[i])
+    plt.plot(mach, CDi_wing_val, label=f'{alt} ft', color=color_list[i])
 
 #plt.plot(0.5*np.ones(100), np.linspace(0.005, 0.03, 100), 'k--')
-plt.title('CDo_wing') # gonna do some LaTeX stuff with this in a bit, but this is a proof of concept lol
+plt.title('CDi_wing') # gonna do some LaTeX stuff with this in a bit, but this is a proof of concept lol
 plt.xlabel('Mach Number')
 plt.ylabel('CDo_wing')
 plt.legend()

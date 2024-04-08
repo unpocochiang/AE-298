@@ -113,4 +113,5 @@ def CDo_wing_calc(re, mach, sweep, tc_avg,sref,swet, maxtcloc, Weight,vinf,rho,t
     sub_CDo = CalcCDow(cf,rls,tc_avg,sref,swet, maxtcloc)
     trans_CDo = CalcCDwave(mach,Weight,vinf,rho,sweep,tcmax,ctip,croot,Wsref,Span)
     CDo_wing_val = fcn.fcn(mach, sub_CDo, trans_CDo)
+    print(f'trans={trans_CDo} | sub={sub_CDo}')
     return CDo_wing_val
