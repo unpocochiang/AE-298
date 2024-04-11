@@ -128,7 +128,7 @@ for i, alt in enumerate(altitude):
         #sref and wref may be both s_wing
         vinf = m * speed_of_sound
         CDo_wing_val[k] = CDo_wing.CDo_wing_calc(re, m, erj_data.L_c_4_wing, erj_data.tc_avg,erj_data.S_wing,erj_data.s_wet, erj_data.tc_max_loc,
-                                                weight,vinf,density,erj_data.tc_max,erj_data.c_tip,erj_data.c_root,erj_data.S_wing,erj_data.b_wing)
+                                                erj_data.weight,vinf,density,erj_data.tc_max,erj_data.c_tip,erj_data.c_root,erj_data.S_wing,erj_data.b_wing)
         
         #print(f'Mach: {m}')
         print(f'reynold: {re} | CDo_wing: {CDo_wing_val[k]}')
