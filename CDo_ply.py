@@ -1,6 +1,5 @@
 import numpy as np
 import CDo_htail
-import CDo_htail_trans
 import CDo_vtail
 import CDo_vtail_trans
 import fcn
@@ -37,15 +36,14 @@ def sub_htail_Cdo(re, mach, sref, swet, tc_avg, sweep):
     return CDo_htail_val
 
 def trans_htail_Cdo_Cdw(re, tc_avg, sref, swet, mach, weight, vinf, rho, htail_sweep, tcmax, ctip, croot, span):
-    cf = CDo_htail_trans.trans_calcCf(re,mach)
-    rls = CDo_htail_trans.calcRls(mach, htail_sweep)
+    cf = CDo_htail.trans_calcCf(re,mach)
+    rls = CDo_htail.calcRls(mach, htail_sweep)
     
     tc_max_loc_h = 0.4 # this will make L_param be 1.2 (based on 0018)(<--- not sure what this meant)
-    CDo_htail = CDo_htail_trans.CalcCDow(cf,rls,tc_max_loc_h,tc_avg,sref,swet)
+    CDo_htail_val = CDo_htail.CalcCDow(cf,rls,tc_max_loc_h,tc_avg,sref,swet)
     
-    CDw_htail = CDo_htail_trans.CalcCDwave(mach,weight,vinf,rho,sweep,tcmax,ctip,croot,sref,span)    
-    CDo_trans = CDo_htail_trans.CDo_trans(CDw_htail, CDo_htail)
-    CDo_trans = CDw_htail + CDo_trans
+    CDw_htail = CDo_htail.CalcCDwave(mach,weight,vinf,rho,sweep,tcmax,ctip,croot,sref,span)    
+    CDo_trans = CDo_htail_val + CDw_htail
     return CDo_trans
 
 def sub_vtail_Cdo(re, mach, sref, swet, tc_avg, sweep):
