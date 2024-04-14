@@ -19,7 +19,7 @@ def calcCf(re,mach):
     d = np.array([8511410.2, 3123020.6, 6835568.1, 7239508.8, 6777808.5])
 
 
-    cfm=np.array([0, 0, 0, 0, 0])
+    cfm=np.zeros(5)
     # Calculate Cf for a given Re, for the Mach number ranges with data
     for i in range(5):
         cfm[i]=a[i]+b[i]*np.log(re)+c[i]/np.log(re)+d[i]/(re**2)

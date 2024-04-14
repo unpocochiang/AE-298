@@ -55,7 +55,7 @@ def calcCf(re,mach):
     d = np.array([8511410.2, 3123020.6, 6835568.1, 7239508.8, 6777808.5])
 
 
-    cfm=np.array([0, 0, 0, 0, 0])
+    cfm=np.zeros(5)
     # Calculate Cf for a given Re, for the Mach number ranges with data
     for i in range(5):
         cfm[i]=a[i]+b[i]*np.log(re)+c[i]/np.log(re)+d[i]/(re**2)
@@ -184,6 +184,7 @@ def CD_fus_wave(mach,lfus,dfus,Sfus_maxfront,Wsref):
     CD_wave_x=np.array([CD_wave_x1, CD_wave_x2, CD_wave_x3, CD_wave_x4, CD_wave_x5])
     
     CD_fus_wave_test = np.interp(mach, x, CD_wave_x)
+    print(f'CD_fus_wave_test={CD_fus_wave_test}')
     CD_fus_wave=max(CD_fus_wave_test,0)*Sfus_maxfront/Wsref
     return CD_fus_wave
 
@@ -192,6 +193,7 @@ def CDo_fus(re,mach,l_fus, df, S_fus_wet, S_wing,Sfus_maxfront):
     cf = calcCf(re,mach)
     rwf = calcRwf(mach,re)
     sub_CDo = calcCDofus(cf, rwf, l_fus, df, S_fus_wet, S_wing)
-    trans_CDo = CD_fus_wave(mach,l_fus,df,Sfus_maxfront,S_wing)
+    CDw = CD_fus_wave(mach,l_fus,df,Sfus_maxfront,S_wing)
+    trans_CDo = CDw + sub_CDo
     CDo_fus_val = fcn.fcn(mach, sub_CDo, trans_CDo)
     return CDo_fus_val

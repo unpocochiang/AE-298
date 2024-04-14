@@ -18,7 +18,7 @@ def calcCf(re,mach):
     d = np.array([8511410.2, 3123020.6, 6835568.1, 7239508.8, 6777808.5])
 
 
-    cfm=np.array([0, 0, 0, 0, 0])
+    cfm=np.zeros(5)
     # Calculate Cf for a given Re, for the Mach number ranges with data
     for i in range(5):
         cfm[i]=a[i]+b[i]*np.log(re)+c[i]/np.log(re)+d[i]/(re**2)
@@ -65,10 +65,6 @@ def cdn_int(NoNac,Snac_maxfront,Wsref,t_nac,dnac):
 
     cdn_int = NoNac*Fa2*(CDn_ - 0.05)*(Snac_maxfront/Wsref)
     return cdn_int
-
-def CDo_sub(CDonac, cdn_int):
-    CDo_sub = cdn_int+CDonac
-    return CDo_sub
 
 def CD_nac_wave(numnac,mach,ln,dn,Snac_maxfront,Wsref):
 
@@ -197,13 +193,13 @@ def CD_nac_wave(numnac,mach,ln,dn,Snac_maxfront,Wsref):
     CD_nac_wave=CDwave
     return CD_nac_wave
 
-def CDo_nac(re,mach,numnac,ln,dn,Wsref,NoNac,Snac_maxfront,t_nac,dnac):
+def CDo_nac(re,mach,numnac,ln,dn,Wsref,Snac_maxfront,t_nac):
     cf = calcCf(re,mach)
     CDonac_val = CalcCDonac(numnac,cf,ln,dn,Wsref)
-    cdn_int_val = cdn_int(NoNac,Snac_maxfront,Wsref,t_nac,dnac)
+    cdn_int_val = cdn_int(numnac,Snac_maxfront,Wsref,t_nac,dn)
     CDw_nac_val = CD_nac_wave(numnac,mach,ln,dn,Snac_maxfront,Wsref)
 
     CDo_sub = cdn_int_val + CDonac_val
     CDo_trans = cdn_int_val + CDonac_val + CDw_nac_val
     CDo_nac_val = fcn.fcn(mach,CDo_sub,CDo_trans)
-    return CDonac_val
+    return CDo_nac_val

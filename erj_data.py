@@ -4,7 +4,7 @@ import numpy as np
 #
 ## ERJ-175
 # Flight Condition Data
-weight = 855157 #lbf
+weight = 85517 #lbf
 rle = 0.21 #leading edge radius #ft
 #  Wing Data
 
@@ -161,12 +161,11 @@ d_nac = d_nac_top/2+d_nac_side/2 #ft
 S_nac_plan = 50.08 #ft2 #side view
 
 S_nac_maxfront = 22.639 #ft2 #front view
+t_nac = 3.381 #ft #front view
 
 # Pylon Data
 
 pylon_arrangement = 0 # 1: horiz pylon, 0: vert pylon
-
-t_nac = 3.381 #ft #front view
 
 NumPyl = 2
  

@@ -82,10 +82,11 @@ def CalcCDwave(mach,Weight,vinf,rho,Sweep,tcmax,ctip,croot,Wsref,Span):
     # Calculate Lift Coefficient based on Weight and q
     #print(f'rho={rho} | vinf={vinf} | wsref={Wsref}')
     CL=Weight/(0.5*rho*vinf*vinf*Wsref)
+    print(f'CL={CL} | Weight={Weight} | rho={rho} | vinf={vinf} | Wrsef={Wsref}')
     #
     #
     # Calculate 1/2 chord sweep and Leading Edge Sweep
-    #
+    # needs to be in degree
     Sweep2=(180.0/np.pi)*np.arctan(((Span/2)*np.tan(Sweep*np.pi/180)+0.25*ctip-0.25*croot)/(Span/2))
     #
     # Calculate Mdd
@@ -111,7 +112,8 @@ def CDo_wing_calc(re, mach, sweep, tc_avg,sref,swet, maxtcloc, Weight,vinf,rho,t
     cf = calcCf(re, mach)
     rls = calcRls(mach,sweep)
     sub_CDo = CalcCDow(cf,rls,tc_avg,sref,swet, maxtcloc)
-    trans_CDo = CalcCDwave(mach,Weight,vinf,rho,sweep,tcmax,ctip,croot,Wsref,Span)
+    CDw = CalcCDwave(mach,Weight,vinf,rho,sweep,tcmax,ctip,croot,Wsref,Span)
+    trans_CDo = sub_CDo + CDw
     CDo_wing_val = fcn.fcn(mach, sub_CDo, trans_CDo)
-    print(f'trans={trans_CDo} | sub={sub_CDo}')
+    print(f'CDw={CDw} | trans={trans_CDo} | sub={sub_CDo}')
     return CDo_wing_val

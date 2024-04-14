@@ -1,6 +1,6 @@
 import numpy as np
-
-#need Re
+import CalcLparam
+import fcn
 
 def calcCf(re,mach):
     # Calculate Skin Friction Coefficient: Cf based on Re and Mach #
@@ -19,14 +19,14 @@ def calcCf(re,mach):
     d = np.array([8511410.2, 3123020.6, 6835568.1, 7239508.8, 6777808.5])
 
 
-    cfm=np.array([0, 0, 0, 0, 0])
+    cfm=np.zeros(5)
     # Calculate Cf for a given Re, for the Mach number ranges with data
     for i in range(5):
         cfm[i]=a[i]+b[i]*np.log(re)+c[i]/np.log(re)+d[i]/(re**2)
 
 
     # interpolate from Mach number data to find Cf for given Mach 
-    cf= np.interp(mach, m, cfm, left=None, right=None, period=None)
+    cf= np.interp(mach, m, cfm)
     return cf
 
 def calcRls(mach,sweep):
@@ -45,7 +45,7 @@ def calcRls(mach,sweep):
     e = np.array([-111.9494230798703, -61.6248216450456, -92.2697362481424, -63.8412329193048])
     f = np.array([30.8640121878326, 17.8367311969906, 25.0753189387920, 16.8857580964143])
 
-    rlsm=np.array([0, 0, 0, 0])
+    rlsm=np.zeros(4)
     # loop through Mach #s and calculate Cf for a given Re
     for i in range(0,3):
         rlsm[i]=a[i]+b[i]*(coswp)+c[i]*(coswp**2)+d[i]*(coswp**3)+e[i]*(coswp**4)+f[i]*(coswp**5)
@@ -54,24 +54,63 @@ def calcRls(mach,sweep):
     rls = np.interp(mach, m, rlsm, left=np.nan, right=np.nan)
     return rls
 
-def CalcLparam(maxtcloc):
-    #
-    # routine to determine L_param DATCOM page 4.1.5.1-2
-    #
-    param=0
-    if(maxtcloc >= 0.30):
-        param=1.2
-
-    if(maxtcloc < 0.30):
-        param=2.0
-    
-
-    L_param=param
-    return L_param
-
-def CalcCDow(cf,rls,L_param,tc_avg,sref,swet):
-
+def CalcCDow(cf,rls,maxtcloc,tc_avg,sref,swet):
+    L_param = CalcLparam.CalcLparam(maxtcloc)
     # calculate CDow: Subsonic DATCOM 4.1.5.1-a
     CDo_vtail = cf*(1 + L_param*tc_avg + 100*(tc_avg)**4)*rls*(swet/sref)
     return CDo_vtail
 
+def CalcCDow_transonic(cf,tc_max_loc_v,tc_avg,sref,swet):
+    L_param = CalcLparam.CalcLparam(tc_max_loc_v)
+    # calculate CDow: Subsonic DATCOM 4.1.5.1-a
+
+    CDo_vtail = cf*(1 + L_param*tc_avg)*(swet/sref)
+    return CDo_vtail
+
+def CalcCDwave(mach,Weight,vinf,rho,Sweep,tc_max_v,ctip,croot,Wsref,Span):
+    #
+    # Calculate Wing Wave Drag 
+    # from Gur, Mason, and Schetz
+    # "Full-Configuration Drag Estimation" Journal of Aircraft Vol. 47, No. 4
+    # July-August 2010
+    #
+    #
+    # ka=0.95 for supercritical  sections, 0.87 for conventional 
+    #
+    ka=0.95
+    #
+    # Calculate Lift Coefficient based on Weight and q
+    CL=Weight/(0.5*rho*vinf*vinf*Wsref)
+    #
+    #
+    # Calculate 1/2 chord sweep and Leading Edge Sweep
+    #
+    Sweep2=(180.0/np.pi)*np.arctan(((Span/2)*np.tan(Sweep*np.pi/180)+0.25*ctip-0.25*croot)/(Span/2))
+    #
+    # Calculate Mdd
+    #
+    Mdd=(ka-CL/(10*(np.cos(Sweep2*np.pi/180))^2)-tc_max_v/(np.cos(Sweep2*np.pi/180)))/(np.cos(Sweep2*np.pi/180))
+    #
+    # Calculate Mcr
+    #
+    Mcr=Mdd-(0.1/80)^(1/3)
+    #
+    # Calculate CDwave
+    #
+    CDwave=0
+    if (mach <= Mcr):
+        CDwave=0
+    if (mach > Mcr):
+        CDwave=20*((mach-Mcr)^4)
+    CDw_vtail = CDwave
+    return CDw_vtail
+
+def CDo_vtail(re, mach, sweep, tc_max_loc_v, tc_avg,sref, swet, Weight, vinf,rho,tc_max_v,ctip, croot, Wsref, Span):
+    cf = calcCf(re, mach)
+    rls = calcRls(mach,sweep)
+    sub_CDo = CalcCDow(cf,rls,tc_max_loc_v,tc_avg,sref,swet)
+    cdw = CalcCDwave(mach,Weight,vinf,rho,sweep,tc_max_v,ctip,croot,Wsref,Span)
+    cdo_trans = CalcCDow_transonic(cf,tc_max_loc_v,tc_avg,sref,swet)
+    trans_CDo = cdw + cdo_trans
+    CDo_vtail_val = fcn.fcn(mach, sub_CDo, trans_CDo)
+    return CDo_vtail_val
