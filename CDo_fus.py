@@ -35,7 +35,7 @@ def calcRwf(mach, re):
     rwfm[6]=(0.94027346-0.21838712*np.log(re)+0.019174732*(np.log(re))**2-0.00075384048*(np.log(re))**3+1.1189366e-5*(np.log(re))**4)/(1.0-0.2304395*np.log(re)+0.020080209*(np.log(re))**2-0.00078380017*(np.log(re))**3+1.1556739e-5*(np.log(re))**4)
     #
     # interpolate for final Rwf based on mach #
-    rwf = np.interp(mach, m, rwfm, left=None, right=None, period=None)
+    rwf = np.interp(mach, m, rwfm)
     return rwf
 
 def calcCf(re,mach):
@@ -62,7 +62,7 @@ def calcCf(re,mach):
 
 
     # interpolate from Mach number data to find Cf for given Mach 
-    cf= np.interp(mach, m, cfm, left=None, right=None, period=None)
+    cf= np.interp(mach, m, cfm)
     return cf
 
 def calcCDofus(cf, rwf, l_fus, df, S_fus_wet, S_wing):
