@@ -26,8 +26,8 @@ def Est_pylon_wet_area(t_nac, dn,l_py):
 def sub_htail_Cdo(re, mach, sref, swet, tc_avg, sweep):
     cf = CDo_htail.calcCf(re,mach)
     rls = CDo_htail.calcRls(mach,sweep)
-    L_param = 1.2
-    CDo_htail_val = CDo_htail.CalcCDow(cf,rls,L_param,tc_avg,sref,swet)
+    maxtcloc = 0.4
+    CDo_htail_val = CDo_htail.CalcCDow(cf,rls,maxtcloc,tc_avg,sref,swet)
     return CDo_htail_val
 
 def trans_htail_Cdo_Cdw(re, tc_avg, sref, swet, mach, weight, vinf, rho, htail_sweep, tcmax, ctip, croot, span):
@@ -44,8 +44,8 @@ def trans_htail_Cdo_Cdw(re, tc_avg, sref, swet, mach, weight, vinf, rho, htail_s
 def sub_vtail_Cdo(re, mach, sref, swet, tc_avg, sweep):
     cf = CDo_vtail.calcCf(re, mach)
     rls = CDo_vtail.calcRls(mach,sweep)
-    L_param = 1.2
-    CDo_vtail_val = CDo_vtail.CalcCDow(cf,rls,L_param,tc_avg,sref,swet)
+    maxtcloc = 0.4
+    CDo_vtail_val = CDo_vtail.CalcCDow(cf,rls,maxtcloc,tc_avg,sref,swet)
     return CDo_vtail_val
 
 def trans_vtail_Cdo_cdw(re, tc_avg, sref, swet, mach, weight, vinf, rho, sweep, tcmax, ctip, croot, span):
@@ -55,7 +55,7 @@ def trans_vtail_Cdo_cdw(re, tc_avg, sref, swet, mach, weight, vinf, rho, sweep, 
     CDw_vtail = CDo_vtail.CalcCDwave(mach,weight,vinf,rho,sweep,tcmax,ctip,croot,sref,span)
     return CDo_vtail_trans_val + CDw_vtail
 
-def CDo_ply(num_ply, pylon_arrangement,t_nac, dn,l_py,re, mach, sref, tc_avg,weight,vinf, rho,ctip, croot):
+def CDo_ply(num_ply, pylon_arrangement,t_nac, dn,l_py,re, mach, sref,weight,vinf, rho,ctip, croot):
     tc_avg = 0.06 #set value by Dr.Elle. Im not sure where it came from
     htail_sweep = 50
     vtail_sweep = 50

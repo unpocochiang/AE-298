@@ -51,7 +51,7 @@ def calcRls(mach,sweep):
         rlsm[i]=a[i]+b[i]*(coswp)+c[i]*(coswp**2)+d[i]*(coswp**3)+e[i]*(coswp**4)+f[i]*(coswp**5)
 
     # interpolate for final Cf based on mach #
-    rls = np.interp(mach, m, rlsm, left=np.nan, right=np.nan)
+    rls = np.interp(mach, m, rlsm)
     return rls
 
 def CalcCDow(cf,rls,maxtcloc,tc_avg,sref,swet):
@@ -89,11 +89,11 @@ def CalcCDwave(mach,Weight,vinf,rho,Sweep,tc_max_v,ctip,croot,Wsref,Span):
     #
     # Calculate Mdd
     #
-    Mdd=(ka-CL/(10*(np.cos(Sweep2*np.pi/180))^2)-tc_max_v/(np.cos(Sweep2*np.pi/180)))/(np.cos(Sweep2*np.pi/180))
+    Mdd=(ka-CL/(10*(np.cos(Sweep2*np.pi/180))**2)-tc_max_v/(np.cos(Sweep2*np.pi/180)))/(np.cos(Sweep2*np.pi/180))
     #
     # Calculate Mcr
     #
-    Mcr=Mdd-(0.1/80)^(1/3)
+    Mcr=Mdd-(0.1/80)**(1/3)
     #
     # Calculate CDwave
     #
@@ -101,7 +101,7 @@ def CalcCDwave(mach,Weight,vinf,rho,Sweep,tc_max_v,ctip,croot,Wsref,Span):
     if (mach <= Mcr):
         CDwave=0
     if (mach > Mcr):
-        CDwave=20*((mach-Mcr)^4)
+        CDwave=20*((mach-Mcr)**4)
     CDw_vtail = CDwave
     return CDw_vtail
 

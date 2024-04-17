@@ -46,7 +46,7 @@ for i, alt in enumerate(altitude):
         #
         vinf = m * speed_of_sound
         CDo_val[k] = CDo_ply.CDo_ply(erj_data.NumPyl, erj_data.pylon_arrangement,
-                                     erj_data.t_nac, erj_data.d_nac,erj_data.l_pyl,re, mach, erj_data.sref, tc_avg,erj_data.weight,vinf, density, erj_data.l_pyl, erj_data.l_pyl)
+                                     erj_data.t_nac, erj_data.d_nac,erj_data.l_pyl,re, m, erj_data.S_wing,erj_data.weight,vinf, density, erj_data.l_pyl, erj_data.l_pyl)
 
         #print(f'Mach: {m}')
         print(f'reynold: {re} | CDo_ply: {CDo_val[k]}')

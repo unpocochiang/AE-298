@@ -26,7 +26,7 @@ def calcCf(re,mach):
 
 
     # interpolate from Mach number data to find Cf for given Mach 
-    cf= np.interp(mach, m, cfm, left=None, right=None, period=None)
+    cf= np.interp(mach, m, cfm)
     return cf
 
 def calcRls(mach,sweep):
@@ -51,7 +51,7 @@ def calcRls(mach,sweep):
         rlsm[i]=a[i]+b[i]*(coswp)+c[i]*(coswp**2)+d[i]*(coswp**3)+e[i]*(coswp**4)+f[i]*(coswp**5)
 
     # interpolate for final Cf based on mach #
-    rls = np.interp(mach, m, rlsm, left=np.nan, right=np.nan)
+    rls = np.interp(mach, m, rlsm)
     return rls
 
 def CalcCDow(cf,rls,tc_max_loc_h,tc_avg,sref,swet):

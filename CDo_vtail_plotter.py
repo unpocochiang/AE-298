@@ -6,7 +6,7 @@ import erj_data
 import re_calc
 import atmosphere_function
 
-import CDo_htail
+import CDo_vtail
 
 # from profile_drag import calCf, calcRls, CalcLparam, CalcCDow
 
@@ -38,22 +38,16 @@ for i, alt in enumerate(altitude):
     for k, m in enumerate(mach):
         print(k)
         print(f'm:{m}')
-        re = re_calc.re(density, m, erj_data.c_bar_h, visc, temp) # float for each mach
+        re = re_calc.re(density, m, erj_data.l_nac, visc, temp) # float for each mach
         
         #l_fus is just l_fus
         #df is d_fus
         #vinf is true airspeed
         #
         vinf = m * speed_of_sound
-        CDo_val[k] = CDo_htail.CDo_htail(re,m, erj_data.L_c_4_h,  
-                                             erj_data.tc_max_loc_h,
-                                             erj_data.tc_avg_h,
-                                             erj_data.S_wing,
-                                             erj_data.S_h_wet, erj_data.weight,
-                                             vinf, erj_data.c_tip_h, 
-                                             erj_data.c_root_h, erj_data.b_h, 
-                                             erj_data.S_h,density, 
-                                             erj_data.tc_max_h)        
+        CDo_val[k] = CDo_vtail.CDo_vtail(re, m, erj_data.L_c_4_v, erj_data.tc_max_loc_v, erj_data.tc_avg_v, erj_data.S_wing, erj_data.S_v_wet, erj_data.weight, 
+                                         vinf,density,erj_data.tc_max_v, erj_data.c_tip_v, erj_data.c_root_v, erj_data.S_v, erj_data.b_v)
+
         #print(f'Mach: {m}')
         print(f'reynold: {re} | CDo_wing: {CDo_val[k]}')
         
@@ -61,8 +55,8 @@ for i, alt in enumerate(altitude):
     plt.plot(mach, CDo_val, label=f'{alt} ft', color=color_list[i])
 
 #plt.plot(0.5*np.ones(100), np.linspace(0.005, 0.03, 100), 'k--')
-plt.title('CDo_htail') # gonna do some LaTeX stuff with this in a bit, but this is a proof of concept lol
+plt.title('CDo_nacelle') # gonna do some LaTeX stuff with this in a bit, but this is a proof of concept lol
 plt.xlabel('Mach Number')
-plt.ylabel('CDo_htail')
+plt.ylabel('CDo_nacelle')
 plt.legend()
 plt.show()
