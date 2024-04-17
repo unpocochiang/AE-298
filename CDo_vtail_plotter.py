@@ -38,7 +38,7 @@ for i, alt in enumerate(altitude):
     for k, m in enumerate(mach):
         print(k)
         print(f'm:{m}')
-        re = re_calc.re(density, m, erj_data.l_nac, visc, temp) # float for each mach
+        re = re_calc.re(density, m, erj_data.c_bar_v, visc, temp) # float for each mach
         
         #l_fus is just l_fus
         #df is d_fus
@@ -46,7 +46,9 @@ for i, alt in enumerate(altitude):
         #
         vinf = m * speed_of_sound
         CDo_val[k] = CDo_vtail.CDo_vtail(re, m, erj_data.L_c_4_v, erj_data.tc_max_loc_v, erj_data.tc_avg_v, erj_data.S_wing, erj_data.S_v_wet, erj_data.weight, 
-                                         vinf,density,erj_data.tc_max_v, erj_data.c_tip_v, erj_data.c_root_v, erj_data.S_v, erj_data.b_v)
+                                         vinf,density,erj_data.tc_max_v, erj_data.c_tip_v, erj_data.c_root_v, 
+                                         erj_data.S_wing #use S_wing now according to simulink, but I think it should be s_h 
+                                         , erj_data.b_v)
 
         #print(f'Mach: {m}')
         print(f'reynold: {re} | CDo_wing: {CDo_val[k]}')

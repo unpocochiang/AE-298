@@ -52,7 +52,8 @@ for i, alt in enumerate(altitude):
                                              erj_data.S_h_wet, erj_data.weight,
                                              vinf, erj_data.c_tip_h, 
                                              erj_data.c_root_h, erj_data.b_h, 
-                                             erj_data.S_h,density, 
+                                             erj_data.S_wing #use S_wing now according to simulink, but I think it should be s_h
+                                             ,density, 
                                              erj_data.tc_max_h)        
         #print(f'Mach: {m}')
         print(f'reynold: {re} | CDo_wing: {CDo_val[k]}')

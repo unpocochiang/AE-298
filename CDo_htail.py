@@ -57,7 +57,7 @@ def calcRls(mach,sweep):
 def CalcCDow(cf,rls,tc_max_loc_h,tc_avg,sref,swet):
     L_param = CalcLparam.CalcLparam(tc_max_loc_h)
     # calculate CDow: Subsonic DATCOM 4.1.5.1-a
-    CDo_htail = cf*(1 + L_param*tc_avg + 100*(tc_avg)**4)*rls*(swet/sref);
+    CDo_htail = cf*(1 + L_param*tc_avg + 100*(tc_avg)**4)*rls*(swet/sref)
     return CDo_htail
 
 def trans_calcCf(re,mach):

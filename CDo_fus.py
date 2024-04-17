@@ -184,7 +184,7 @@ def CD_fus_wave(mach,lfus,dfus,Sfus_maxfront,Wsref):
     CD_wave_x=np.array([CD_wave_x1, CD_wave_x2, CD_wave_x3, CD_wave_x4, CD_wave_x5])
     
     CD_fus_wave_test = np.interp(mach, x, CD_wave_x)
-    print(f'CD_fus_wave_test={CD_fus_wave_test}')
+    print(f'CD_fus_wave_test={CD_fus_wave_test} | mach={mach}')
     CD_fus_wave=max(CD_fus_wave_test,0)*Sfus_maxfront/Wsref
     return CD_fus_wave
 
@@ -193,7 +193,8 @@ def CDo_fus(re,mach,l_fus, df, S_fus_wet, S_wing,Sfus_maxfront):
     cf = calcCf(re,mach)
     rwf = calcRwf(mach,re)
     sub_CDo = calcCDofus(cf, rwf, l_fus, df, S_fus_wet, S_wing)
-    CDw = CD_fus_wave(mach,l_fus,df,Sfus_maxfront,S_wing)
-    trans_CDo = CDw + sub_CDo
-    CDo_fus_val = fcn.fcn(mach, sub_CDo, trans_CDo)
+    #CDw = CD_fus_wave(mach,l_fus,df,Sfus_maxfront,S_wing)
+    #trans_CDo = CDw + sub_CDo
+    CDo_fus_val = sub_CDo
+    #fcn.fcn(mach, sub_CDo, trans_CDo)
     return CDo_fus_val
