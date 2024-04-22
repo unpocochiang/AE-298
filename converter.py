@@ -42,4 +42,27 @@ def first():
 
 import numpy as np
 
-# Your original structured array
+import numpy as np
+
+import numpy as np
+
+# Define the starting value and the increment
+start_value = 0.01
+end_value = 0.7
+increment = 0.01
+
+# Calculate the number of elements needed
+num_elements = int((end_value - start_value) / increment) + 1
+
+# Create the matrix
+matrix = []
+
+# Fill the matrix with the desired values
+current_value = start_value
+for i in range(num_elements):
+    matrix.append(current_value) 
+    current_value += increment
+
+print(matrix)
+mach = np.array([0.1, 0.15, 0.2, 0.25, 0.3, 0.4, 0.5,0.51,0.52,0.53,0.54,0.55,0.56,0.57,0.58,0.59,0.6,0.7])
+print(mach)
