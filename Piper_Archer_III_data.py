@@ -27,7 +27,7 @@ c_root = 6 + (1/6) #ft
 
 
 
-
+'''
 
 #Fuslage + Engine Data
 
@@ -73,3 +73,5 @@ Prop_pitch = 5 + (1/6) #ft at 0.75 of the length from the center to the tip I re
 
 Prop_hub_dia = 0.5 #ft
 Prop_hub_thickness = 0.25 #ft
+
+'''
