@@ -19,9 +19,9 @@ S_wet = 362.34 #ft^2
 
 c_bar = 4.829 #ft
 L_c_4_wing = 5.25 #ft
-tc_avg = 12.4 #percentage
-tc_max_loc = 14.1 #percentage
-tc_max = 10.4 #percentage
+tc_avg = 12.4/100 #percentage
+tc_max_loc = 14.1/100 #percentage
+tc_max = 10.4/100 #percentage
 c_tip = 3.5 #ft
 c_root = 6 + (1/6) #ft
 
