@@ -74,3 +74,23 @@ plt.xlabel('Mach Number')
 plt.ylabel('CDo_wing')
 plt.legend()
 plt.show()
+m=0.4
+altitude, geo_alt, temp, pressure, density, speed_of_sound, visc = atmosphere_function.AtmosphereFunction(0) 
+re = re_calc.re(density, 0.4, Piper_Archer_III_data.c_bar, visc, temp) # float for each mach
+        
+#span is b_wing
+#sweep is L_c_4_wing
+        #vinf is true airspeed
+        #sref and wref may be both s_wing
+vinf = m * speed_of_sound
+CDo_wing_val_2 = CDo_wing.CDo_wing_calc(re, m, Piper_Archer_III_data.L_c_4_wing, Piper_Archer_III_data.tc_avg,Piper_Archer_III_data.S_wing,
+                                         Piper_Archer_III_data.S_wet, Piper_Archer_III_data.tc_max_loc,
+                                         Piper_Archer_III_data.takeoff_weight,vinf,density,Piper_Archer_III_data.tc_max,Piper_Archer_III_data.c_tip,
+                                         Piper_Archer_III_data.c_root,Piper_Archer_III_data.S_wing,Piper_Archer_III_data.Wing_span)
+        
+print(f'Mach: {m}')
+print(f'reynold: {re} | CDo_wing: {CDo_wing_val_2}')
+D=0.008359041155112665/2*density*vinf**2*Piper_Archer_III_data.S_wing
+print(D)
+t=134225/vinf
+print(t)
