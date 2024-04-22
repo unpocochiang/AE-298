@@ -189,7 +189,7 @@ def CD_nac_wave(numnac,mach,ln,dn,Snac_maxfront,Wsref):
         CDwave=0
     
     if (mach > Mcr):
-        CDwave=20*((mach-Mcr)^4)*Snac_maxfront/Wsref
+        CDwave=20*((mach-Mcr)**4)*Snac_maxfront/Wsref
     CD_nac_wave=CDwave
     return CD_nac_wave
 

@@ -12,7 +12,22 @@ import CDo_nac
 
 # Now we initialize our values, and calculate!
 #mach = np.linspace(0.01, 0.8, 100) # Mach Number
-mach = np.array([0.1, 0.15, 0.2, 0.25, 0.3, 0.4, 0.5,0.51,0.52,0.53,0.54,0.55,0.56,0.57,0.58,0.59,0.6,0.7])
+# Define the starting value and the increment
+start_value = 0.01
+end_value = 0.7
+increment = 0.01
+
+# Calculate the number of elements needed
+num_elements = int((end_value - start_value) / increment) + 1
+
+# Create the matrix
+mach = []
+
+# Fill the matrix with the desired values
+current_value = start_value
+for i in range(num_elements):
+    mach.append(current_value) 
+    current_value += increment
 # altitude = np.arange(0., 55000., 5000.) # ft
 altitude = np.array([0., 5000., 10000., 15000, 20000, 25000, 30000])
 mach_size = np.size(mach)
@@ -57,7 +72,7 @@ for i, alt in enumerate(altitude):
     plt.plot(mach, CDo_val, label=f'{alt} ft', color=color_list[i])
 
 #plt.plot(0.5*np.ones(100), np.linspace(0.005, 0.03, 100), 'k--')
-plt.title('CDo_nacelle') # gonna do some LaTeX stuff with this in a bit, but this is a proof of concept lol
+plt.title('CDo of nacelle') # gonna do some LaTeX stuff with this in a bit, but this is a proof of concept lol
 plt.xlabel('Mach Number')
 plt.ylabel('CDo_nacelle')
 plt.legend()
