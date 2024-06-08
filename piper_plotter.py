@@ -69,12 +69,12 @@ for i, alt in enumerate(altitude):
     plt.plot(mach, CDo_wing_val, label=f'{alt} ft', color=color_list[i])
 
 #plt.plot(0.5*np.ones(100), np.linspace(0.005, 0.03, 100), 'k--')
-plt.title('CDo of wing') # gonna do some LaTeX stuff with this in a bit, but this is a proof of concept lol
+plt.title('Piper Archer III CDo of wing') # gonna do some LaTeX stuff with this in a bit, but this is a proof of concept lol
 plt.xlabel('Mach Number')
 plt.ylabel('CDo_wing')
 plt.legend()
 plt.show()
-m=0.4
+m=0.27
 altitude, geo_alt, temp, pressure, density, speed_of_sound, visc = atmosphere_function.AtmosphereFunction(0) 
 re = re_calc.re(density, 0.4, Piper_Archer_III_data.c_bar, visc, temp) # float for each mach
         
@@ -92,5 +92,5 @@ print(f'Mach: {m}')
 print(f'reynold: {re} | CDo_wing: {CDo_wing_val_2}')
 D=0.008359041155112665/2*density*vinf**2*Piper_Archer_III_data.S_wing
 print(D)
-t=134225/vinf
+t=134000/vinf
 print(t)
