@@ -116,7 +116,7 @@ for i, alt in enumerate(altitude):
         vinf = m * speed_of_sound
         CDi_wing_val[k] = CDi_wing.CDi_wing_calc(m, erj_data.AR, erj_data.L_c_4_wing, erj_data.taper, density, vinf, erj_data.rle, visc, erj_data.b_wing, erj_data.c_tip, 
                                                  erj_data.c_root, erj_data.cl_alpha, erj_data.weight, erj_data.S_wing)
-
+        
         #print(f'Mach: {m}')
         print(f'CDo_wing: {CDi_wing_val[k]}')
         
