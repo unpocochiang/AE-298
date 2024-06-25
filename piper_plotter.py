@@ -11,6 +11,7 @@ import CDo_vtail
 import CDo_htail
 import CDo_fus
 import CDi_wing
+import CD_misc
 
 # Define the starting value and the increment
 start_value = 0.01
@@ -50,6 +51,9 @@ for i, alt in enumerate(altitude):
     CDi_wing_val = np.zeros_like(mach)
     CDi_htail_val = np.zeros_like(mach)
     CDi_fus_val = np.zeros_like(mach)
+    CD_misc_val = np.zeros_like(mach)
+    CD_lg_val = np.zeros_like(mach)
+    total_CD_val = np.zeros_like(mach)
     
     # Define values independent of mach, as we will iteratively define CDo_wing w/ mach
     altitude, geo_alt, temp, pressure, density, speed_of_sound, visc = atmosphere_function.AtmosphereFunction(alt)
@@ -98,7 +102,13 @@ for i, alt in enumerate(altitude):
                                                     Piper_Archer_III_data.c_root,Cl_alpha,
                                                     Piper_Archer_III_data.AR,Piper_Archer_III_data.L_c_4_wing)
         # might need to double check with ERJ-Data
-
+        CD_misc_cons = 0.05
+        CDo_pyl = 0
+        CDo_nac = 0
+        CD_misc_val[k] = CD_misc.CD_misc_calc(CDo_pyl,CDo_fus,CDo_wing_val[k],CDo_nac,CDo_vtail_val[k],CDo_htail_val[k],CD_misc_cons)
+        #Missing Landing Gear Calculation
+        CD_lg_val[k] = 
+        total_CD_val[k] = 
 
         #print(f'Mach: {m}')
         print(f'reynold: {re} | CDo_wing: {CDo_wing_val[k]}')

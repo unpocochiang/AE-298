@@ -2,6 +2,13 @@ def CD_misc_calc(CDo_pyl,CDo_fus,CDo_w,CDo_nac,CDo_vtail,CDo_htail,CD_misc_cons)
     CDo = CDo_pyl + CDo_fus + CDo_w + CDo_nac + CDo_vtail + CDo_htail
 
     CD_misc_a=CD_misc_cons*CDo
+
+    #CDo_flaps=0.0074*1.1*0.8*(40*np.pi/180)
+    #flaps, landing gear, and spoiler not needed
+    #CDi_flaps=0.14^2*(DCL_flaps)^2*cosd(Sweep);
+    #CD_LG=0.044899;
+    #SpoilerMultiplier=1.2
+
     # if mission ==7065 || 7070
     #     CDo_flaps=0.0074*1.1*0.8*(20*pi/180)
     #     CDi_flaps=0.14^2*(DCL_flaps)^2*cosd(Sweep)
