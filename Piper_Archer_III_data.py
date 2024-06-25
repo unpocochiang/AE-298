@@ -13,17 +13,18 @@ takeoff_weight = 2550 #lbs
 #Wing Data
 b_wing = 35.5 #ft #verified
 S_wing = 170 #ft^2 #verified
-
+AR = (b_wing**2)/S_wing
 S_wet = 362.34 #ft^2
 
 c_bar = 4.829 #ft
 L_c_4_wing = 5.25 #ft
-tc_avg = 0.124 #ratio
+tc_avg = 0.124 #ratiof
 tc_max_loc = 0.141 #percentage #from the leading edge
 tc_max = 0.104 #ratio
 
 c_tip = 3.5 #ft #chord at tip #
 c_root = 6 + (1/6) #ft #chord at root
+taper = c_tip/c_root
 
 
 
@@ -74,20 +75,15 @@ S_v_wet = 25.682414101748073 #S_v_expo*(1.977+0.52*tc_avg_v)# #ft2 # Eq 7.12 Ray
 tc_max_v = 0.06530633636363636 #top view
 tc_avg_v = 0.1200344
 tc_max_loc_v = 0.3003177 #top view
-
-#b_v = 18.166 #ft
+L_c_4_v =  34.56949355 #c/4, deg
+c_tip_v = 1.707 #ft #side view
+c_root_v = 3.858 #ft #side view
+b_v = 4.0425 #ft
  
 #S_v = 174+55/144 #ft2 #APM
- 
-#L_c_4_v =  38.762 #c/4, deg
- 
-#c_root_v = 20.457 #ft #side view
- 
-#c_tip_v = 4.48 #ft #side view
 
 #taper_v = c_tip_v/c_root_v
 #S_v_expo= 195.088 #only one side, same as htail.
-#tc_max_loc_v = 0.3003177 #top view
 
 #c_bar_v  = c_root_v * (2/3)*(1 + taper_v + taper_v**2)/(1+taper_v) #ft
 
