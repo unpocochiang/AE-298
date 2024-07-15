@@ -26,7 +26,10 @@ c_tip = 3.5 #ft #chord at tip #
 c_root = 6 + (1/6) #ft #chord at root
 taper = c_tip/c_root
 
-
+#Airfoil Data
+c_l_alpha=0.11031
+c_l_0=0.347
+rle=0.07217848
 
 
 #Fuslage + Engine Data
@@ -103,3 +106,5 @@ Prop_hub_dia = 0.5 #ft
 Prop_hub_thickness = 0.25 #ft
 
 
+#Landing Gear Geometry
+s_lg_front = 2.5432 #ft2

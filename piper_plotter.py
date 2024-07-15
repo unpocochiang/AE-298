@@ -12,6 +12,7 @@ import CDo_htail
 import CDo_fus
 import CDi_wing
 import CD_misc
+import CD_lg
 
 # Define the starting value and the increment
 start_value = 0.01
@@ -90,36 +91,36 @@ for i, alt in enumerate(altitude):
                                         Piper_Archer_III_data.S_fus_maxfront)  
         CDi_wing_val[k] = CDi_wing.CDi_wing_calc(m, Piper_Archer_III_data.AR, Piper_Archer_III_data.L_c_4_wing, Piper_Archer_III_data.taper, 
                                                 density, vinf, Piper_Archer_III_data.rle, visc, Piper_Archer_III_data.b_wing, 
-                                                Piper_Archer_III_data.c_tip, Piper_Archer_III_data.c_root, Piper_Archer_III_data.cl_alpha, 
+                                                Piper_Archer_III_data.c_tip, Piper_Archer_III_data.c_root, Piper_Archer_III_data.c_l_alpha, 
                                                 Piper_Archer_III_data.takeoff_weight, Piper_Archer_III_data.S_wing)
         CDi_htail_val[k] = CDi_wing.induced_drag_htail(Piper_Archer_III_data.AR_h,Piper_Archer_III_data.S_h,Piper_Archer_III_data.S_wing,Piper_Archer_III_data.takeoff_weight,
                                                        density,vinf,Piper_Archer_III_data.S_wing)
         # might need to double check with ERJ-Data
-        CDi_fus_val[k] = CDi_wing.fuse_induced_drag(Clo,Piper_Archer_III_data.l_fus,Piper_Archer_III_data.d_fus,mach,Piper_Archer_III_data.S_wing,
+        CDi_fus_val[k] = CDi_wing.fuse_induced_drag(Piper_Archer_III_data.c_l_0,Piper_Archer_III_data.l_fus,Piper_Archer_III_data.d_fus,m,Piper_Archer_III_data.S_wing,
                                                     Piper_Archer_III_data.S_fus_plan,Piper_Archer_III_data.S_fus_b,
                                                     Piper_Archer_III_data.takeoff_weight, density, vinf, Piper_Archer_III_data.S_wing, 
                                                     Piper_Archer_III_data.b_wing, Piper_Archer_III_data.c_tip,
-                                                    Piper_Archer_III_data.c_root,Cl_alpha,
+                                                    Piper_Archer_III_data.c_root,Piper_Archer_III_data.c_l_alpha,
                                                     Piper_Archer_III_data.AR,Piper_Archer_III_data.L_c_4_wing)
         # might need to double check with ERJ-Data
         CD_misc_cons = 0.05
         CDo_pyl = 0
         CDo_nac = 0
-        CD_misc_val[k] = CD_misc.CD_misc_calc(CDo_pyl,CDo_fus,CDo_wing_val[k],CDo_nac,CDo_vtail_val[k],CDo_htail_val[k],CD_misc_cons)
+        CD_misc_val[k] = CD_misc.CD_misc_calc(CDo_pyl,CDo_fus_val[k],CDo_wing_val[k],CDo_nac,CDo_vtail_val[k],CDo_htail_val[k],CD_misc_cons)
         #Missing Landing Gear Calculation
-        CD_lg_val[k] = 
-        total_CD_val[k] = 
+        CD_lg_val[k] = CD_lg.cd_lg(Piper_Archer_III_data.L_gear_flatplate, Piper_Archer_III_data.s_lg_front)
+        total_CD_val[k] = CD_lg_val[k] + CD_misc_val[k] + CDi_fus_val[k] + CDi_htail_val[k] + CDi_wing_val[k] + CDo_fus_val[k] + CDo_htail_val[k] + CDo_vtail_val[k] + CDo_wing_val[k]
 
         #print(f'Mach: {m}')
-        print(f'reynold: {re} | CDo_wing: {CDo_wing_val[k]}')
+        #print(f'reynold: {re} | CDo_wing: {CDo_wing_val[k]}')
         
     # Plot each CDo_wing now that it has finished construction
-    plt.plot(mach, CDo_wing_val, label=f'{alt} ft', color=color_list[i])
+    plt.plot(mach, total_CD_val, label=f'{alt} ft', color=color_list[i])
 
 #plt.plot(0.5*np.ones(100), np.linspace(0.005, 0.03, 100), 'k--')
-plt.title('Piper Archer III CDo of wing') # gonna do some LaTeX stuff with this in a bit, but this is a proof of concept lol
+plt.title('Piper Archer III Total CD') # gonna do some LaTeX stuff with this in a bit, but this is a proof of concept lol
 plt.xlabel('Mach Number')
-plt.ylabel('CDo_wing')
+plt.ylabel('CD')
 plt.legend()
 plt.show()
 
