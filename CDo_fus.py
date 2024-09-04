@@ -184,7 +184,7 @@ def CD_fus_wave(mach,lfus,dfus,Sfus_maxfront,Wsref):
     CD_wave_x=np.array([CD_wave_x1, CD_wave_x2, CD_wave_x3, CD_wave_x4, CD_wave_x5])
     
     CD_fus_wave_test = np.interp(mach, x, CD_wave_x)
-    print(f'CD_fus_wave_test={CD_fus_wave_test} | mach={mach}')
+    #print(f'CD_fus_wave_test={CD_fus_wave_test} | mach={mach}')
     CD_fus_wave=max(CD_fus_wave_test,0)*Sfus_maxfront/Wsref
     return CD_fus_wave
 

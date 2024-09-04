@@ -1,6 +1,8 @@
 import numpy as np
 import sympy as sp
 from sympy import Symbol
+import CD_lg
+import Piper_Archer_III_data
 
 def read_airfoil_data(filename):
     with open(filename, 'r') as file:
@@ -242,4 +244,8 @@ def airfoil_tc(filename):
     return tc_avg, tc_max, tc_max_loc
 #airfoil_tc('n0012.txt')
 #vertical_stab_area()
-horizontal_stab_area()
+#horizontal_stab_area()
+
+takeoff_weight = Piper_Archer_III_data.takeoff_weight / 250
+flate_plate_area = CD_lg.flat_plate_area_calc(takeoff_weight,1)
+print(flate_plate_area)
