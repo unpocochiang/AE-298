@@ -1,4 +1,6 @@
 import sympy as sp
+import matplotlib.pyplot as plt
+import numpy as np
 from sympy import Symbol
 import CDi_wing
 import atmosphere_function
@@ -77,12 +79,62 @@ def theoretical_Cd_calc(m):
     CDo_nac = 0
     CD_misc_val = CD_misc.CD_misc_calc(CDo_pyl,CDo_fus_val,CDo_wing_val,CDo_nac,CDo_vtail_val,CDo_htail_val,CD_misc_cons)
     #Missing Landing Gear Calculation
-    CD_lg_val = CD_lg.cd_lg(Piper_Archer_III_data.L_gear_flatplate, Piper_Archer_III_data.s_lg_front) 
+    flat_plate_area = CD_lg.flat_plate_area_calc(Piper_Archer_III_data.takeoff_weight,1)
+    flat_plate_area = Piper_Archer_III_data.L_gear_flatplate
+    CD_lg_val = CD_lg.cd_lg(flat_plate_area, Piper_Archer_III_data.s_lg_front) 
+    CD_lg_val = 0
     total_CD_val = CD_lg_val + CD_misc_val + CDi_fus_val + CDi_htail_val + CDi_wing_val + CDo_fus_val + CDo_htail_val + CDo_vtail_val + CDo_wing_val
+    
+    '''
+    print(f'CD_lg_val: {CD_lg_val/total_CD_val}')
+    print(f'CD_misc_val: {CD_misc_val/total_CD_val}')
+    print(f'CDi_fus_val: {CDi_fus_val/total_CD_val}')
+    print(f'CDi_htail_val: {CDi_htail_val/total_CD_val}')
+    print(f'CDi_wing_val: {CDi_wing_val/total_CD_val}')
+    print(f'CDo_fus_val: {CDo_fus_val/total_CD_val}')
+    print(f'CDo_htail_val: {CDo_htail_val/total_CD_val}')
+    print(f'CDo_vtail_val: {CDo_vtail_val/total_CD_val}')
+    print(f'CDo_wing_val: {CDo_wing_val/total_CD_val}')
+    '''
     return total_CD_val
 
-mach = 0.1
-real_cd = real_Cd_calc(mach)
-theoretical_cd = theoretical_Cd_calc(mach)
-print(real_cd)
-print(theoretical_cd)
+def comparison(mach):
+    real_cd = real_Cd_calc(mach)
+    theoretical_cd = theoretical_Cd_calc(mach)
+    error = (theoretical_cd - real_cd) / real_cd * 100
+    return real_cd, theoretical_cd, error
+
+'''
+mach = 0.01
+real_cd, theoretical_cd, error = comparison(mach)
+print(f'real CD value: {real_cd}')
+print(f'theoretica CD value: {theoretical_cd}')
+print(f'percent error: {error}')
+'''
+
+# Generate Mach speeds from 0 to 0.6
+mach_values = np.linspace(0, 0.4, 1000)
+errors = []
+
+# Calculate percentage error for each Mach speed
+for mach in mach_values:
+    real_cd, _, error = comparison(mach)
+    if real_cd == 0:
+        error = 0
+    errors.append(error)
+
+# Plotting
+plt.figure(figsize=(10, 6))
+plt.plot(mach_values, errors, label='Percentage Error', color='b')
+plt.title('Percentage Error of CD vs. Mach Speed')
+plt.xlabel('Mach Speed')
+plt.ylabel('Percentage Error (%)')
+plt.grid(True)
+plt.axhline(0, color='r', linestyle='--')  # Add a line at y=0 for reference
+plt.legend()
+plt.show()
+
+
+#percent error increases almost exponentially.
+# value 0.1 for landing gear
+#landing gear .02

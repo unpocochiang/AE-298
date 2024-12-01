@@ -92,8 +92,9 @@ b_v = 4.0425 #ft
 
 
 #L_gear data use page 423 for drag calculations
-#L_gear_flatplate = 1.161678
-L_gear_flatplate = 8.40670836000000 #new landing gear flate plate area
+L_gear_flatplate = 1.161678
+#L_gear_flatplate=2.23 #Test value
+#L_gear_flatplate = 8.40670836000000 #new landing gear flate plate area
 
 #Propeller data use thrust calculations
 #Data received from https://www.sensenich.com/wp-content/uploads/2019/10/P4EA_R13-1.pdf
@@ -108,4 +109,5 @@ Prop_hub_thickness = 0.25 #ft
 
 
 #Landing Gear Geometry
-s_lg_front = 2.5432 #ft2
+#s_lg_front = 2.5432 #ft2
+s_lg_front = 4.265 #ft2 #new val

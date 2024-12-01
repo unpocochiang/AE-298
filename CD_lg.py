@@ -5,8 +5,9 @@ def flat_plate_area_calc(takeoff_weight,config):
     #tricycle config is 1
     #conventional config is 2 
     #Bicyle and outrigger config is 3
+    takeoff_weight = takeoff_weight/1000
     x = sp.symbols('x')
-    tricycle_eq = 4.47+0.393*x-(6.91*(10**-4))*x**2
+    tricycle_eq = 0.747 + 0.54*x + -(2.74*10**(-3))*x**2 + 1.19*10**(-5)*x**3 + -2.23*10**(-8)*x**4
     convetional_eq = 2.31+0.328*x-(4.59*(10**-4))*x**2
     outrigger_eq = 10.7+0.27*x-(1.12*(10**-3))*x**2+(2.95*(10**-6))*x**3-(3.14*(10**-4))*x**4
     flate_plate_area = 0
