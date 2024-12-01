@@ -114,19 +114,17 @@ for i, alt in enumerate(altitude):
         
 
     # Plot each CDo_wing now that it has finished construction
-    plt.plot(mach, total_CD_val, label=f'{alt} ft', color=color_list[i])
+    plt.plot(mach, CDo_wing_val, label=f'{alt} ft', color=color_list[i])
 
 #plt.plot(0.5*np.ones(100), np.linspace(0.005, 0.03, 100), 'k--')
-#plt.xlim(0.01, 0.05)  # Set x-axis range 
-#plt.ylim(0, 0.2)  # Set y-axis range
+plt.xlim(0, 0.5)  # Set x-axis range 
+plt.ylim(0, .1)  # Set y-axis range
 plt.title('Piper Archer III Total CD') # gonna do some LaTeX stuff with this in a bit, but this is a proof of concept lol
 plt.xlabel('Mach Number')
 plt.ylabel('CD')
 plt.legend()
 plt.show()
 
-print(mach)
-print(total_CD_val)
 '''
 m=0.27
 altitude, geo_alt, temp, pressure, density, speed_of_sound, visc = atmosphere_function.AtmosphereFunction(0) 
