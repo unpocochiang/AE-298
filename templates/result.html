@@ -4,8 +4,10 @@
     <title>Result</title>
 </head>
 <body>
-    <h1>Drag Coefficient vs. Mach Number</h1>
-    <img src="{{ plot_url }}" alt="Drag Coefficient Plot">
+    <div id="stockGraph" class="graph-container hidden">
+        <h2>Drag Coefficient</h2>
+        <div>{{ drag_html | safe }}</div>
+    </div>
     <br><br>
     <a href="/">Back to Input</a>
 </body>
