@@ -6,19 +6,142 @@
 <body>
     <h1>Aircraft Drag Coefficient Calculator</h1>
     <form action="/calculate" method="post">
-        <label for="wing_area">Wing Area (m²):</label>
-        <input type="number" id="wing_area" name="wing_area" required><br><br>
+        <h2>Aircraft General Specifications</h2>
+        <label for="length">Aircraft Length (ft):</label>
+        <input type="number" id="length" name="length" step="0.01" required><br><br>
+    
+        <label for="height">Aircraft Height (ft):</label>
+        <input type="number" id="height" name="height" step="0.01" required><br><br>
+    
+        <label for="takeoff_weight">Takeoff Weight (lbs):</label>
+        <input type="number" id="takeoff_weight" name="takeoff_weight" step="1" required><br><br>
+    
+        <h2>Wing Data</h2>
+        <label for="b_wing">Wing Span (b, ft):</label>
+        <input type="number" id="b_wing" name="b_wing" step="0.01" required><br><br>
+    
+        <label for="s_wing">Wing Area (S, ft²):</label>
+        <input type="number" id="s_wing" name="s_wing" step="0.01" required><br><br>
+    
+        <label for="s_wet">Wing Wetted Area (S_wet, ft²):</label>
+        <input type="number" id="s_wet" name="s_wet" step="0.01" required><br><br>
+        
+        <label for="c_bar">c_bar (c_bar, ft):</label>
+        <input type="number" id="c_bar" name="c_bar" step="0.01" required><br><br>
 
-        <label for="drag_coefficient_0">Drag Coefficient at Zero Lift (C<sub>D0</sub>):</label>
-        <input type="number" step="0.001" id="drag_coefficient_0" name="drag_coefficient_0" required><br><br>
+        <label for="L_c_4_wing">L_c_4_wing (L_c_4_wing, deg):</label>
+        <input type="number" id="L_c_4_wing" name="L_c_4_wing" step="0.01" required><br><br>
 
-        <label for="aspect_ratio">Aspect Ratio:</label>
-        <input type="number" step="0.01" id="aspect_ratio" name="aspect_ratio" required><br><br>
+        <label for="tc_avg">Thickness-to-Chord Ratio (t/c):</label>
+        <input type="number" id="tc_avg" name="tc_avg" step="0.001" required><br><br>
 
-        <label for="efficiency_factor">Oswald Efficiency Factor:</label>
-        <input type="number" step="0.01" id="efficiency_factor" name="efficiency_factor" required><br><br>
+        <label for="tc_max_loc">Maximum Thickness-to-Chord Location(tc_max_loc):</label>
+        <input type="number" id="tc_max_loc" name="tc_max_loc" step="0.001" required><br><br>
+        
+        <label for="tc_max">Maximum Thickness-to-Chord (tc_max):</label>
+        <input type="number" id="tc_max" name="tc_max" step="0.001" required><br><br>
 
+        <label for="c_tip">Tip Chord (c_tip, ft):</label>
+        <input type="number" id="c_tip" name="c_tip" step="0.01" required><br><br>
+        
+        <label for="c_root">Root Chord (c_root, ft):</label>
+        <input type="number" id="c_root" name="c_root" step="0.01" required><br><br>
+
+        <h2>Fuselage Data</h2>
+        <label for="l_fus">Fuselage Length (l_fus, ft):</label>
+        <input type="number" id="l_fus" name="l_fus" step="0.01" required><br><br>
+    
+        <label for="d_fus">Fuselage Diameter (d_fus, ft):</label>
+        <input type="number" id="d_fus" name="d_fus" step="0.01" required><br><br>
+    
+        <label for="s_fus_wet">Fuselage Wetted Area (S_fus_wet, ft²):</label>
+        <input type="number" id="s_fus_wet" name="s_fus_wet" step="0.01" required><br><br>
+    
+        <label for="s_fus_maxfront">Fuselage Max Cross-Sectional Area (ft²):</label>
+        <input type="number" id="s_fus_maxfront" name="s_fus_maxfront" step="0.01" required><br><br>
+        
+        <label for="S_fus_plan">Fuselage Planform Area (ft²):</label>
+        <input type="number" id="S_fus_plan" name="S_fus_plan" step="0.01" required><br><br>
+
+        <label for="d_fus_b">Tailend Fuselage Diameter (ft):</label>
+        <input type="number" id="d_fus_b" name="d_fus_b" step="0.01" required><br><br>
+
+        <h2>Airfoil Data</h2>
+        <label for="c_l_alpha">Max Coefficient of Lift (c_l_alpha):</label>
+        <input type="number" id="c_l_alpha" name="c_l_alpha" step="0.01" required><br><br>
+    
+        <label for="c_l_0">Coefficient of Lift at 0 AoA (c_l_0):</label>
+        <input type="number" id="c_l_0" name="c_l_0" step="0.01" required><br><br>
+    
+        <label for="rle">Leading Edge Radius (c_l_0):</label>
+        <input type="number" id="c_l_0" name="c_l_0" step="0.01" required><br><br>
+
+        <h2>Horizontal Stabilizer Data</h2>
+        <label for="b_h">Horizontal Stabilizer Span (b_h, ft):</label>
+        <input type="number" id="b_h" name="b_h" step="0.01" required><br><br>
+    
+        <label for="s_h">Horizontal Stabilizer Area (S_h, ft²):</label>
+        <input type="number" id="s_h" name="s_h" step="0.01" required><br><br>
+        
+        <label for="s_h_expo">Horizontal Stabilizer Exposed Area (S_h_expo, ft²):</label>
+        <input type="number" id="s_h_expo" name="s_h_expo" step="0.01" required><br><br>
+
+        <label for="c_root_h">Horizontal Stabilizer Root Chord (ft):</label>
+        <input type="number" id="c_root_h" name="c_root_h" step="0.01" required><br><br>
+        
+        <label for="c_tip_h">Horizontal Stabilizer Tip Chord (ft):</label>
+        <input type="number" id="c_tip_h" name="c_tip_h" step="0.01" required><br><br>
+        
+        <label for="L_c_4_h">Horizontal Stabilizer L_c_4_h (deg):</label>
+        <input type="number" id="L_c_4_h" name="L_c_4_h" step="0.01" required><br><br>
+
+        <label for="tc_max_h">Horizontal Stabilizer Max t/c:</label>
+        <input type="number" id="tc_max_h" name="tc_max_h" step="0.001" required><br><br>
+        
+        <label for="tc_avg_h">Horizontal Stabilizer Average t/c:</label>
+        <input type="number" id="tc_max_h" name="tc_max_h" step="0.001" required><br><br>
+
+        <label for="tc_max_loc_h">Horizontal Stabilizer Max t/c Location:</label>
+        <input type="number" id="tc_max_loc_h" name="tc_max_loc_h" step="0.001" required><br><br>
+
+        <h2>Vertical Stabilizer Data</h2>
+        <label for="v_stab_area">Vertical Stabilizer Area (ft²):</label>
+        <input type="number" id="v_stab_area" name="v_stab_area" step="0.01" required><br><br>
+        
+        <label for="s_v_wet">Vertical Stabilizer Wetted Area (ft²):</label>
+        <input type="number" id="s_v_wet" name="s_v_wet" step="0.01" required><br><br>
+
+        <label for="b_v">Vertical Stabilizer Span (b_v, ft):</label>
+        <input type="number" id="b_v" name="b_v" step="0.01" required><br><br>
+        
+        <label for="L_c_4_v">L_c_4_v (deg):</label>
+        <input type="number" id="L_c_4_v" name="L_c_4_v" step="0.01" required><br><br>
+
+        <label for="c_root_v">Vertical Stabilizer Root Chord (ft):</label>
+        <input type="number" id="c_root_v" name="c_root_v" step="0.01" required><br><br>
+        
+        <label for="c_tip_v">Vertical Stabilizer Tip Chord (ft):</label>
+        <input type="number" id="c_tip_v" name="c_tip_v" step="0.01" required><br><br>
+
+        <label for="tc_max_v">Vertical Stabilizer Max t/c:</label>
+        <input type="number" id="tc_max_v" name="tc_max_v" step="0.001" required><br><br>
+        
+        <label for="tc_avg_v">Vertical Stabilizer Average t/c:</label>
+        <input type="number" id="tc_avg_v" name="tc_avg_v" step="0.001" required><br><br>
+
+        <label for="tc_max_loc_v">Vertical Stabilizer Max t/c Location:</label>
+        <input type="number" id="tc_max_loc_v" name="tc_max_loc_v" step="0.001" required><br><br>
+
+
+        <h2>Landing Gear Data</h2>
+        <label for="l_gear_flatplate">Landing Gear Flat Plate Length (ft):</label>
+        <input type="number" id="l_gear_flatplate" name="l_gear_flatplate" step="0.01" required><br><br>
+    
+        <label for="s_lg_front">Landing Gear Front Area (ft²):</label>
+        <input type="number" id="s_lg_front" name="s_lg_front" step="0.01" required><br><br>
+    
         <button type="submit">Calculate</button>
     </form>
+    
 </body>
 </html>
