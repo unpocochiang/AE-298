@@ -1,4 +1,5 @@
 import numpy as np
+import CD_lg 
 
 #Piper Archer 3 Geo Data
 #Data received from https://www.aopa.org/news-and-media/all-news/1994/november/pilot/piper-archer-iii
@@ -27,8 +28,8 @@ c_root = 4.7571242886 #ft #chord at root
 taper = c_tip/c_root
 
 #Airfoil Data
-c_l_alpha = 
-c_l_0 = 
+c_l_alpha = 0.0979866
+c_l_0 = 0.194
 rle = 0.0146
 
 #Fuslage + Engine Data
@@ -73,22 +74,27 @@ tc_max_loc_h = 0.3 #top view of Vtail
 
 #V_Stab_height =
 #V_stab_width =
-V_stab_area = 18.140359029204298 #ft^2 # My calculation shows the reference area to be 12.5945867091379
-S_v_wet =  #S_v_expo*(1.977+0.52*tc_avg_v)# #ft2 # Eq 7.12 Raymer 6th Ed.
+V_stab_area = 18.140359029204298 #ft^2
 tc_max_v = 0.09 #top view #NACA0012
 tc_avg_v = 0.065
 tc_max_loc_v = 0.3 #top view
-L_c_4_v = #c/4, deg
+S_v_expo = 18.1207072743835
+if tc_avg_v > 0.05:
+    S_v_wet =  S_v_expo*(1.977+0.52*tc_avg_v)# #ft2 # Eq 7.12 Raymer 6th Ed.
+else:
+    S_v_wet =  S_v_expo*2.003# #ft2 # Eq 7.12 Raymer 6th Ed.
+
+L_c_4_v = 29.93283736772014 #c/4, deg
 c_tip_v = 1.3751525578 #ft #side view
 c_root_v = 5.918554982795 #ft #side view #note: the root cacluated is slanted
 b_v = 5.4809069029 #ft
 
 
 #L_gear data use page 423 for drag calculations
-L_gear_flatplate = 
+L_gear_flatplate = CD_lg.flat_plate_area_calc(takeoff_weight,1)
 #L_gear_flatplate=2.23 #Test value
 #L_gear_flatplate = 8.40670836000000 #new landing gear flate plate area
 
 #Landing Gear Geometry
 #s_lg_front = 2.5432 #ft2
-s_lg_front =  #ft2 #new val
+s_lg_front = 3.44245730403703 #ft2 #new val
