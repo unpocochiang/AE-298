@@ -47,7 +47,7 @@ app = Flask(__name__)
 def index():
     return render_template("index.html")
 
-@app.route("/drag/calculate", methods=["POST"])
+@app.route("/calculate", methods=["POST"])
 def calculate():
     Length = float(request.form["length"]) #ft
     height = float(request.form["height"]) #ft
