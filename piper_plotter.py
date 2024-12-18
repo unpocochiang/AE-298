@@ -60,7 +60,7 @@ for i, alt in enumerate(altitude):
     altitude, geo_alt, temp, pressure, density, speed_of_sound, visc = atmosphere_function.AtmosphereFunction(alt)
     
 
-    print(f'Altitude: {alt}')
+    #print(f'Altitude: {alt}')
 
     # Iteratively define CDo_wing w/ mach
     for k, m in enumerate(mach):
@@ -109,8 +109,8 @@ for i, alt in enumerate(altitude):
         CD_lg_val[k] = CD_lg.cd_lg(Piper_Archer_III_data.L_gear_flatplate, Piper_Archer_III_data.s_lg_front)
         total_CD_val[k] = CD_lg_val[k] + CD_misc_val[k] + CDi_fus_val[k] + CDi_htail_val[k] + CDi_wing_val[k] + CDo_fus_val[k] + CDo_htail_val[k] + CDo_vtail_val[k] + CDo_wing_val[k]
 
-        print(f'Mach: {m}')
-        print(f'reynold: {re} | CDo_wing: {CDo_wing_val[k]} | CDo_wing: {CDi_fus_val[k]} | CDo_wing: {CDi_htail_val[k]} | CDo_wing: {CDi_wing_val[k]} | CDo_wing: {CD_lg_val[k]} | CDo_wing: {CD_misc_val[k]} | CDo_wing: {CDi_fus_val[k]}')
+        #print(f'Mach: {m}')
+        #print(f'reynold: {re} | CDo_wing: {CDo_wing_val[k]} | CDo_wing: {CDi_fus_val[k]} | CDo_wing: {CDi_htail_val[k]} | CDo_wing: {CDi_wing_val[k]} | CDo_wing: {CD_lg_val[k]} | CDo_wing: {CD_misc_val[k]} | CDo_wing: {CDi_fus_val[k]}')
         
 
     # Plot each CDo_wing now that it has finished construction

@@ -92,9 +92,9 @@ b_v = 5.4809069029 #ft
 
 #L_gear data use page 423 for drag calculations
 L_gear_flatplate = CD_lg.flat_plate_area_calc(takeoff_weight,1)
+#print(L_gear_flatplate)
 #L_gear_flatplate=2.23 #Test value
 #L_gear_flatplate = 8.40670836000000 #new landing gear flate plate area
 
 #Landing Gear Geometry
-#s_lg_front = 2.5432 #ft2
-s_lg_front = 3.44245730403703 #ft2 #new val
+s_lg_front = 3.44245730403703 #ft2 

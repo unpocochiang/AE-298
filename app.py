@@ -49,10 +49,12 @@ def index():
 
 @app.route("/calculate", methods=["POST"])
 def calculate():
-    Length = float(request.form["length"]) #ft
-    height = float(request.form["height"]) #ft
     takeoff_weight = float(request.form["takeoff_weight"]) #lbs
-    
+    mach_min = float(request.form["mach_min"])
+    mach_max = float(request.form["mach_max"])
+    altitude_min = float(request.form["altitude_min"])
+    altitude_max = float(request.form["altitude_max"])
+
     #Wing Data
     b_wing = float(request.form["b_wing"]) #ft
     S_wing = float(request.form["s_wing"]) #ft^2
@@ -106,16 +108,18 @@ def calculate():
     c_root_v = float(request.form["c_root_v"]) #ft #side view #note: the root cacluated is slanted
     b_v = float(request.form["b_v"]) #ft
     
-    #Landing Gear Data
-    L_gear_flatplate = float(request.form["l_gear_flatplate"])
-    s_lg_front = float(request.form["s_lg_front"]) #ft2 #new val
+    # Handle landing gear data
+    has_landing_gear = 'has_landing_gear' in request.form
+    if has_landing_gear:
+        L_gear_flatplate = float(request.form["l_gear_flatplate"])
+        s_lg_front = float(request.form["s_lg_front"])
+    else:
+        L_gear_flatplate = 0 
+        s_lg_front = 10 
 
-    # Calculate drag coefficient over a range of Mach numbers
-    mach_numbers = np.linspace(0.1, 1.0, 100)
-
-        # Define the starting value and the increment
-    start_value = 0.01
-    end_value = 0.5
+    # Define the starting value and the increment
+    start_value = mach_min
+    end_value = mach_max
     increment = 0.01
 
     # Calculate the number of elements needed
@@ -130,10 +134,7 @@ def calculate():
         mach.append(current_value) 
         current_value += increment
     # altitude = np.arange(0., 55000., 5000.) # ft
-    altitude = np.array([0., 5000., 10000., 15000, 20000, 25000, 30000])
-    mach_size = np.size(mach)
-
-
+    altitude = np.linspace(altitude_min, altitude_max, 7)
 
     colors_xkcd = mcolors.XKCD_COLORS
     color_list = [colors_xkcd['xkcd:red'],   colors_xkcd['xkcd:orange'], colors_xkcd['xkcd:purple'],      colors_xkcd['xkcd:apple green'],

@@ -82,7 +82,7 @@ def theoretical_Cd_calc(m):
     flat_plate_area = CD_lg.flat_plate_area_calc(Piper_Archer_III_data.takeoff_weight,1)
     flat_plate_area = Piper_Archer_III_data.L_gear_flatplate
     CD_lg_val = CD_lg.cd_lg(flat_plate_area, Piper_Archer_III_data.s_lg_front) 
-    CD_lg_val = 0
+    #CD_lg_val = 0
     total_CD_val = CD_lg_val + CD_misc_val + CDi_fus_val + CDi_htail_val + CDi_wing_val + CDo_fus_val + CDo_htail_val + CDo_vtail_val + CDo_wing_val
     
     '''
@@ -122,7 +122,7 @@ for mach in mach_values:
     if real_cd == 0:
         error = 0
     errors.append(error)
-
+print(errors)
 # Plotting
 plt.figure(figsize=(10, 6))
 plt.plot(mach_values, errors, label='Percentage Error', color='b')
