@@ -29,7 +29,7 @@
 </head>
 <body>
     <h1>Aircraft Drag Coefficient Calculator</h1>
-    <form action="/drag/calculate" method="post">
+    <form action="/calculate" method="post">
         <h2>Aircraft General Specifications</h2>
         <label for="takeoff_weight">Takeoff Weight (lbs):</label>
         <input type="number" id="takeoff_weight" name="takeoff_weight" step=".01" min="0.01" required><br><br>
@@ -93,9 +93,6 @@
         <label for="s_fus_maxfront">Fuselage Max Cross-Sectional Area (ft²):</label>
         <input type="number" id="s_fus_maxfront" name="s_fus_maxfront" step="0.01" min="0.01" required><br><br>
         
-        <label for="S_fus_plan">Fuselage Planform Area (ft²):</label>
-        <input type="number" id="S_fus_plan" name="S_fus_plan" step="0.01" min="0.01" required><br><br>
-
         <label for="d_fus_b">Tailend Fuselage Diameter (ft):</label>
         <input type="number" id="d_fus_b" name="d_fus_b" step="0.01" min="0.01" required><br><br>
 

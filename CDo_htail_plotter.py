@@ -29,7 +29,7 @@ for i in range(num_elements):
     mach.append(current_value) 
     current_value += increment
 # altitude = np.arange(0., 55000., 5000.) # ft
-altitude = np.array([0., 5000., 10000., 15000, 20000, 25000, 30000])
+altitude = np.array([0., 6666., 13333., 20000, 26666, 33333,40000])
 mach_size = np.size(mach)
 
 colors_xkcd = mcolors.XKCD_COLORS

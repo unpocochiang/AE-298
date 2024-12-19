@@ -84,7 +84,7 @@ def AtmosphereFunction(h_G):          #Atmosphere Function
 #mach = np.linspace(0.01, 0.8, 100) # Mach Number
 mach = np.array([0.1, 0.15, 0.2, 0.25, 0.3, 0.4, 0.5,0.51,0.52,0.53,0.54,0.55,0.56,0.57,0.58,0.59,0.6,0.7])
 # altitude = np.arange(0., 55000., 5000.) # ft
-altitude = np.array([0., 5000., 10000., 15000, 20000, 25000, 30000])
+altitude = np.array([0., 6666., 13333., 20000, 26666, 33333,40000])
 mach_size = np.size(mach)
 
 
@@ -116,7 +116,7 @@ for i, alt in enumerate(altitude):
         vinf = m * speed_of_sound
         CDi_wing_val[k] = CDi_wing.CDi_wing_calc(m, erj_data.AR, erj_data.L_c_4_wing, erj_data.taper, density, vinf, erj_data.rle, visc, erj_data.b_wing, erj_data.c_tip, 
                                                  erj_data.c_root, erj_data.cl_alpha, erj_data.weight, erj_data.S_wing)
-        
+
         #print(f'Mach: {m}')
         print(f'CDo_wing: {CDi_wing_val[k]}')
         

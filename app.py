@@ -8,6 +8,8 @@ import matplotlib.colors as mcolors
 import plotly.graph_objs as go
 import json
 
+import erj_data
+
 import re_calc
 import atmosphere_function
 import CDo_wing
@@ -84,7 +86,6 @@ def calculate():
     S_fus_wet = 3.4*(S_fus_plan_top+S_fus_plan_side)/2
     d_fus = float(request.form["d_fus"]) #ft
     S_fus_maxfront = float(request.form["s_fus_maxfront"]) #ft2 #front view
-    S_fus_plan = float(request.form["S_fus_plan"]) #ft2
     d_fus_b= float(request.form["d_fus_b"]) #diamter of the fuselage at end of the tail #Note the tail is not really circular #top down view
     S_fus_b = (d_fus_b**2)*(np.pi/4) #ft2 #equation written on Roskam Fig 4.17
     
@@ -95,7 +96,7 @@ def calculate():
     L_c_4_h =  float(request.form["L_c_4_h"]) #c/4, deg #top view
     S_h = float(request.form["s_h"])  #ft2 #APM #!!!Have to double check
     AR_h = (b_h**2)/S_h 
-    tc_max_h = float(request.form["d_fus_b"]) #top view
+    tc_max_h = float(request.form["tc_max_h"]) #top view
     tc_avg_h = float(request.form["tc_avg_h"])
     S_h_expo = float(request.form["s_h_expo"]) # ft2
     if tc_avg_h > 0.05:
@@ -103,7 +104,9 @@ def calculate():
     else:
         S_h_wet =  S_h_expo*2.003# #ft2 # Eq 7.12 Raymer 6th Ed.
     tc_max_loc_h = float(request.form["tc_max_loc_h"]) #top view of Vtail
-    
+    taper_h = c_tip_h/c_root_h 
+    c_bar_h  = c_root_h * (2/3)*(1 + taper_h + taper_h**2)/(1+taper_h) #ft 
+
     #V_Stab Data
     tc_avg_v = float(request.form["tc_avg_v"])
     S_v_expo = float(request.form['S_v_expo'])
@@ -117,7 +120,9 @@ def calculate():
     c_tip_v = float(request.form["c_tip_v"]) #ft #side view
     c_root_v = float(request.form["c_root_v"]) #ft #side view #note: the root cacluated is slanted
     b_v = float(request.form["b_v"]) #ft
-    
+    taper_v = c_tip_v/c_root_v
+    c_bar_v  = c_root_v * (2/3)*(1 + taper_v + taper_v**2)/(1+taper_v) #ft
+
     # Handle landing gear data
     has_landing_gear = 'has_landing_gear' in request.form
     if has_landing_gear:
@@ -205,23 +210,23 @@ def calculate():
             vinf = m * speed_of_sound
             CDo_wing_val[k] = CDo_wing.CDo_wing_calc(re, m, L_c_4_wing, tc_avg,S_wing,S_wet, tc_max_loc, takeoff_weight,
                                                     vinf,density,tc_max,c_tip, c_root,S_wing,b_wing)
-            
-            CDo_vtail_val[k] = CDo_vtail.CDo_vtail(re, m, L_c_4_v, tc_max_loc_v, tc_avg_v, S_wing, S_v_wet, takeoff_weight, 
+            re_v = re_calc.re(density, m, c_bar_v, visc, temp)                          
+            CDo_vtail_val[k] = CDo_vtail.CDo_vtail(re_v, m, L_c_4_v, tc_max_loc_v, tc_avg_v, S_wing, S_v_wet, takeoff_weight, 
                                                 vinf,density,tc_max_v, c_tip_v, c_root_v, S_wing , b_v)
                                                 #use S_wing now according to simulink, but I think it should be s_h 
-                                        
-            CDo_htail_val[k] = CDo_htail.CDo_htail(re,m, L_c_4_h, tc_max_loc_h, tc_avg_h, S_wing, S_h_wet, takeoff_weight, vinf, 
+            re_h = re_calc.re(density, m, c_bar_h, visc, temp)                               
+            CDo_htail_val[k] = CDo_htail.CDo_htail(re_h , m, L_c_4_h, tc_max_loc_h, tc_avg_h, S_wing, S_h_wet, takeoff_weight, vinf, 
                                                 c_tip_h, c_root_h, b_h, S_wing, density, tc_max_h)      
                                                 #use S_wing now according to simulink, but I think it should be s_h
-                                                
+                     
             CDo_fus_val[k] = CDo_fus.CDo_fus(re,m, l_fus, d_fus, S_fus_wet, S_wing, S_fus_maxfront)  
 
             CDi_wing_val[k] = CDi_wing.CDi_wing_calc(m, AR, L_c_4_wing, taper, density, vinf, rle, visc, b_wing, c_tip, 
                                                     c_root, c_l_alpha, takeoff_weight, S_wing)
-            
+        
             CDi_htail_val[k] = CDi_wing.induced_drag_htail(AR_h,S_h,S_wing,takeoff_weight, density,vinf,S_wing)
             
-            CDi_fus_val[k] = CDi_wing.fuse_induced_drag(c_l_0,l_fus,d_fus,m,S_wing, S_fus_plan,S_fus_b, takeoff_weight, 
+            CDi_fus_val[k] = CDi_wing.fuse_induced_drag(c_l_0,l_fus,d_fus,m,S_wing, S_fus_plan_top,S_fus_b, takeoff_weight, 
                                                         density, vinf, S_wing, b_wing, c_tip, c_root,c_l_alpha, AR,L_c_4_wing)
             
             CDo_nac_val[k] = CDo_nac.CDo_nac(re,m,NumNac,l_nac, d_nac, S_wing, S_nac_maxfront, t_nac)
@@ -234,8 +239,7 @@ def calculate():
             #Missing Landing Gear Calculation
             CD_lg_val[k] = CD_lg.cd_lg(L_gear_flatplate, s_lg_front)
             
-            total_CD_val[k] = CD_lg_val[k] + CD_misc_val[k] + CDi_fus_val[k] + CDi_htail_val[k] + CDi_wing_val[k] + CDo_fus_val[k] 
-            + CDo_htail_val[k] + CDo_vtail_val[k] + CDo_wing_val[k] + CDo_nac_val[k] + CDo_ply_val[k]
+            total_CD_val[k] = CD_lg_val[k] + CD_misc_val[k] + CDi_fus_val[k] + CDi_htail_val[k] + CDi_wing_val[k] + CDo_fus_val[k] + CDo_htail_val[k] + CDo_vtail_val[k] + CDo_wing_val[k] + CDo_nac_val[k] + CDo_ply_val[k]
             
         total_CD_val = np.nan_to_num(total_CD_val, nan=0.0, posinf=1.0, neginf=-1.0).tolist()
         CDo_wing_val = np.nan_to_num(CDo_wing_val, nan=0.0, posinf=1.0, neginf=-1.0).tolist()
@@ -265,11 +269,11 @@ def calculate():
             "ply_cd": CDo_ply_val,
             "total_cd": total_CD_val
         }
-
+    
     drag_html = graph_generator(mach, drag_data)
     return render_template("result.html", drag_html=drag_html, drag_data=drag_data, mach=mach)
 
 if __name__ == "__main__":
-    app.run
+    app.run(debug='True')
 
 application = app

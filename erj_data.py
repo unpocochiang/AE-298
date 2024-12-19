@@ -139,7 +139,7 @@ taper_v = c_tip_v/c_root_v
 tc_max_v = 0.08 #top view
 
 tc_avg_v = (2/3)*tc_max_v 
- 
+
 S_v_expo= 195.088 #only one side, same as htail.
 
 S_v_wet = S_v_expo*(1.977+0.52*tc_avg_v)# #ft2 # Eq 7.12 Raymer 6th Ed.
@@ -157,7 +157,7 @@ l_nac = 13.105 #ft #side view
 d_nac_top= 5.456 #ft #top view
 d_nac_side=5.417 #ft #side view
 d_nac = d_nac_top/2+d_nac_side/2 #ft
- 
+
 S_nac_plan = 50.08 #ft2 #side view
 
 S_nac_maxfront = 22.639 #ft2 #front view
