@@ -14,6 +14,18 @@
             });
         }
     </script>
+    <script>
+        // JavaScript to enable or disable landing gear fields based on checkbox state
+        function toggleNacelleFields() {
+            const nacelleCheckbox = document.getElementById('has_nacelle');
+            const nacelleFields = document.querySelectorAll('.nacelle-field');
+
+            nacelleFields.forEach(field => {
+                field.disabled = !nacelleCheckbox.checked;
+                field.required = nacelleCheckbox.checked; // Make required if checkbox is checked
+            });
+        }
+    </script>
 </head>
 <body>
     <h1>Aircraft Drag Coefficient Calculator</h1>
@@ -160,7 +172,35 @@
     
         <label for="s_lg_front">Landing Gear Front Area (ft²):</label>
         <input type="number" id="s_lg_front" name="s_lg_front" step="0.01" min="0.001" class="landing-gear-field" disabled><br><br>
+        
+        <h2>Nacelle</h2>
+        <label for="has_nacelle">
+            <input type="checkbox" id="has_nacelle" name="has_nacelle" onchange="toggleNacelleFields()"> Include Nacelle?
+        </label><br><br>
 
+        <label for="NumNac">Number of Nacelles:</label>
+        <input type="number" id="NumNac" name="NumNac" step="1" min="1" class="nacelle-field" disabled><br><br>
+    
+        <label for="l_nac">Nacelle Length (ft²):</label>
+        <input type="number" id="l_nac" name="l_nac" step="0.01" min="0.001" class="nacelle-field" disabled><br><br>
+
+        <label for="d_nac">Nacelle Diameter (ft):</label>
+        <input type="number" id="d_nac" name="d_nac" step="0.01" min="0.001" class="nacelle-field" disabled><br><br>
+    
+        <label for="S_nac_maxfront">Nacelle Front Surface Area (ft²):</label>
+        <input type="number" id="S_nac_maxfront" name="S_nac_maxfront" step="0.01" min="0.001" class="nacelle-field" disabled><br><br>
+
+        <label for="t_nac">Nacelle Thickness (ft):</label>
+        <input type="number" id="t_nac" name="t_nac" step="0.01" min="0.001" class="nacelle-field" disabled><br><br>
+    
+        <label for="NumPyl">Number of Pylon:</label>
+        <input type="number" id="NumPyl" name="NumPyl" step="1" min="1" class="nacelle-field" disabled><br><br>
+
+        <label for="pylon_arrangement">Pylon arrangement (Horizontal: 1, Vertical: 0):</label>
+        <input type="number" id="pylon_arrangement" name="pylon_arrangement" step="1" min="0" max="1" class="nacelle-field" disabled><br><br>
+    
+        <label for="l_pyl">Pylon Length (ft):</label>
+        <input type="number" id="l_pyl" name="l_pyl" step="0.01" min="0.001" class="nacelle-field" disabled><br><br>
     
         <button type="submit">Calculate</button>
     </form>

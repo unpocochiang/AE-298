@@ -17,6 +17,8 @@ import CDo_fus
 import CDi_wing
 import CD_misc
 import CD_lg
+import CDo_nac
+import CDo_ply
 
 def graph_generator(mach, drag_data):
     # Create a line trace for each name
@@ -116,6 +118,28 @@ def calculate():
     else:
         L_gear_flatplate = 0 
         s_lg_front = 10 
+    
+    # Handle landing gear data
+    has_nac = 'has_nac' in request.form
+    if has_nac:
+        NumNac = float(request.form["NumNac"])
+        l_nac = float(request.form["l_nac"])
+        d_nac = float(request.form["d_nac"])
+        S_nac_maxfront = float(request.form["S_nac_maxfront"])
+        t_nac = float(request.form["t_nac"])
+        NumPyl = float(request.form["NumPyl"])
+        pylon_arrangement = float(request.form["pylon_arrangement"])
+        l_pyl = float(request.form["l_pyl"])
+    else:
+        NumNac = 0
+        NumPyl = 0
+        S_nac_maxfront = 0
+        l_nac = 1
+        d_nac = 1
+        pylon_arrangement = 1
+        l_pyl = 1
+
+
 
     # Define the starting value and the increment
     start_value = mach_min
@@ -154,6 +178,8 @@ def calculate():
         CDi_fus_val = np.zeros_like(mach)
         CD_misc_val = np.zeros_like(mach)
         CD_lg_val = np.zeros_like(mach)
+        CDo_nac_val = np.zeros_like(mach)
+        CDo_ply_val = np.zeros_like(mach)
         total_CD_val = np.zeros_like(mach)
         
         # Define values independent of mach, as we will iteratively define CDo_wing w/ mach
@@ -168,49 +194,45 @@ def calculate():
             #vinf is true airspeed
             #sref and wref may be both s_wing
             vinf = m * speed_of_sound
-            CDo_wing_val[k] = CDo_wing.CDo_wing_calc(re, m, L_c_4_wing, tc_avg,S_wing,S_wet, tc_max_loc,
-                                                    takeoff_weight,vinf,density,tc_max,c_tip,
-                                                    c_root,S_wing,b_wing)
-            CDo_vtail_val[k] = CDo_vtail.CDo_vtail(re, m, L_c_4_v, tc_max_loc_v, tc_avg_v, S_wing, S_v_wet, 
-                                                takeoff_weight, vinf,density,tc_max_v, c_tip_v, c_root_v, 
-                                                    S_wing #use S_wing now according to simulink, but I think it should be s_h 
-                                                    , b_v)
-            CDo_htail_val[k] = CDo_htail.CDo_htail(re,m, L_c_4_h, tc_max_loc_h, 
-                                                tc_avg_h, S_wing, 
-                                                S_h_wet, takeoff_weight, vinf, 
-                                                c_tip_h, c_root_h, b_h, 
-                                                S_wing, #use S_wing now according to simulink, but I think it should be s_h
-                                                density, tc_max_h)      
-            CDo_fus_val[k] = CDo_fus.CDo_fus(re,m, l_fus, d_fus, 
-                                            S_fus_wet, S_wing,
-                                            S_fus_maxfront)  
-            CDi_wing_val[k] = CDi_wing.CDi_wing_calc(m, AR, L_c_4_wing, taper, 
-                                                    density, vinf, rle, visc, b_wing, 
-                                                    c_tip, c_root, c_l_alpha, 
-                                                    takeoff_weight, S_wing)
-            CDi_htail_val[k] = CDi_wing.induced_drag_htail(AR_h,S_h,S_wing,takeoff_weight,
-                                                        density,vinf,S_wing)
-            # might need to double check with ERJ-Data
-            CDi_fus_val[k] = CDi_wing.fuse_induced_drag(c_l_0,l_fus,d_fus,m,S_wing,
-                                                        S_fus_plan,S_fus_b,
-                                                        takeoff_weight, density, vinf, S_wing, 
-                                                        b_wing, c_tip,
-                                                        c_root,c_l_alpha,
-                                                        AR,L_c_4_wing)
+            CDo_wing_val[k] = CDo_wing.CDo_wing_calc(re, m, L_c_4_wing, tc_avg,S_wing,S_wet, tc_max_loc, takeoff_weight,
+                                                    vinf,density,tc_max,c_tip, c_root,S_wing,b_wing)
+            
+            CDo_vtail_val[k] = CDo_vtail.CDo_vtail(re, m, L_c_4_v, tc_max_loc_v, tc_avg_v, S_wing, S_v_wet, takeoff_weight, 
+                                                vinf,density,tc_max_v, c_tip_v, c_root_v, S_wing , b_v)
+                                                #use S_wing now according to simulink, but I think it should be s_h 
+                                        
+            CDo_htail_val[k] = CDo_htail.CDo_htail(re,m, L_c_4_h, tc_max_loc_h, tc_avg_h, S_wing, S_h_wet, takeoff_weight, vinf, 
+                                                c_tip_h, c_root_h, b_h, S_wing, density, tc_max_h)      
+                                                #use S_wing now according to simulink, but I think it should be s_h
+                                                
+            CDo_fus_val[k] = CDo_fus.CDo_fus(re,m, l_fus, d_fus, S_fus_wet, S_wing, S_fus_maxfront)  
+
+            CDi_wing_val[k] = CDi_wing.CDi_wing_calc(m, AR, L_c_4_wing, taper, density, vinf, rle, visc, b_wing, c_tip, 
+                                                    c_root, c_l_alpha, takeoff_weight, S_wing)
+            
+            CDi_htail_val[k] = CDi_wing.induced_drag_htail(AR_h,S_h,S_wing,takeoff_weight, density,vinf,S_wing)
+            
+            CDi_fus_val[k] = CDi_wing.fuse_induced_drag(c_l_0,l_fus,d_fus,m,S_wing, S_fus_plan,S_fus_b, takeoff_weight, 
+                                                        density, vinf, S_wing, b_wing, c_tip, c_root,c_l_alpha, AR,L_c_4_wing)
+            
+            CDo_nac_val[k] = CDo_nac.CDo_nac(re,m,NumNac,l_nac, d_nac, S_wing, S_nac_maxfront, t_nac)
+            
+            CDo_ply_val[k] = CDo_ply.CDo_ply(NumPyl, pylon_arrangement, t_nac, d_nac, l_pyl,re, m, S_wing, takeoff_weight, vinf, density, l_pyl, l_pyl)
+
             # might need to double check with ERJ-Data
             CD_misc_cons = 0.05
-            CDo_pyl = 0
-            CDo_nac = 0
-            CD_misc_val[k] = CD_misc.CD_misc_calc(CDo_pyl,CDo_fus_val[k],CDo_wing_val[k],CDo_nac,CDo_vtail_val[k],CDo_htail_val[k],CD_misc_cons)
+            CD_misc_val[k] = CD_misc.CD_misc_calc(CDo_ply_val[k],CDo_fus_val[k],CDo_wing_val[k], CDo_nac_val[k] ,CDo_vtail_val[k],CDo_htail_val[k],CD_misc_cons)
             #Missing Landing Gear Calculation
             CD_lg_val[k] = CD_lg.cd_lg(L_gear_flatplate, s_lg_front)
-            total_CD_val[k] = CD_lg_val[k] + CD_misc_val[k] + CDi_fus_val[k] + CDi_htail_val[k] + CDi_wing_val[k] + CDo_fus_val[k] + CDo_htail_val[k] + CDo_vtail_val[k] + CDo_wing_val[k]
+            
+            total_CD_val[k] = CD_lg_val[k] + CD_misc_val[k] + CDi_fus_val[k] + CDi_htail_val[k] + CDi_wing_val[k] + CDo_fus_val[k] 
+            + CDo_htail_val[k] + CDo_vtail_val[k] + CDo_wing_val[k] + CDo_nac_val[k] + CDo_ply_val[k]
             
         total_CD_val = total_CD_val.tolist()
         drag_data[alt] = total_CD_val
 
     drag_html = graph_generator(mach, drag_data)
-    return render_template("result.html", drag_html=drag_html)
+    return render_template("result.html", drag_html=drag_html, drag_data=drag_data, mach=mach)
 
 if __name__ == "__main__":
     app.run

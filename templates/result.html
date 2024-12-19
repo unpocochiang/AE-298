@@ -2,12 +2,49 @@
 <html lang="en">
 <head>
     <title>Result</title>
+    <script>
+        // JavaScript to dynamically update the table based on selected altitude
+        function updateTable() {
+            const selectedAltitude = document.getElementById("altitudeDropdown").value;
+            const tableData = JSON.parse(document.getElementById("tableData").textContent);
+            const machNumbers = JSON.parse(document.getElementById("machNumbers").textContent);
+
+            let tableHtml = "<tr><th>Mach Number</th><th>Total Drag Coefficient</th></tr>";
+            tableData[selectedAltitude].forEach((cd, index) => {
+                tableHtml += `<tr><td>${machNumbers[index]}</td><td>${cd.toFixed(6)}</td></tr>`;
+            });
+            document.getElementById("dragTable").innerHTML = tableHtml;
+        }
+    </script>
 </head>
 <body>
-    <div id="stockGraph" class="graph-container hidden">
-        <h2>Drag Coefficient</h2>
+    <h1>Drag Coefficient Results</h1>
+
+    <div id="stockGraph" class="graph-container">
+        <h2>Drag Coefficient Graph</h2>
         <div>{{ drag_html | safe }}</div>
     </div>
+    
+    <br><br>
+    <h2>Select Altitude</h2>
+    <select id="altitudeDropdown" onchange="updateTable()">
+        {% for altitude in drag_data.keys() %}
+        <option value="{{ altitude }}">{{ altitude }} ft</option>
+        {% endfor %}
+    </select>
+
+    <h2>Total Drag Coefficient Table</h2>
+    <table id="dragTable" border="1">
+        <tr>
+            <th>Mach Number</th>
+            <th>Total Drag Coefficient</th>
+        </tr>
+    </table>
+
+    <!-- Hidden data for JavaScript -->
+    <script type="application/json" id="tableData">{{ drag_data | tojson }}</script>
+    <script type="application/json" id="machNumbers">{{ mach | tojson }}</script>
+
     <br><br>
     <a href="/drag">Back to Input</a>
 </body>
