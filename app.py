@@ -274,6 +274,6 @@ def calculate():
     return render_template("result.html", drag_html=drag_html, drag_data=drag_data, mach=mach)
 
 if __name__ == "__main__":
-    app.run(debug='True')
+    app.run
 
 application = app
