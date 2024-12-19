@@ -3,19 +3,115 @@
 <head>
     <title>Result</title>
     <script>
-        // JavaScript to dynamically update the table based on selected altitude
         function updateTable() {
             const selectedAltitude = document.getElementById("altitudeDropdown").value;
             const tableData = JSON.parse(document.getElementById("tableData").textContent);
-            const machNumbers = JSON.parse(document.getElementById("machNumbers").textContent);
 
-            let tableHtml = "<tr><th>Mach Number</th><th>Total Drag Coefficient</th></tr>";
-            tableData[selectedAltitude].forEach((cd, index) => {
-                tableHtml += `<tr><td>${machNumbers[index]}</td><td>${cd.toFixed(6)}</td></tr>`;
-            });
-            document.getElementById("dragTable").innerHTML = tableHtml;
+            // Clear the table body
+            const tableBody = document.getElementById("dragTable").getElementsByTagName("tbody")[0];
+            tableBody.innerHTML = "";
+
+            // Check if the selected altitude exists in the data
+            if (selectedAltitude in tableData) {
+                const altitudeData = tableData[selectedAltitude];
+                const machNumbers = altitudeData.mach;
+                const wingCd = altitudeData.wing_cd;
+                const htailCd = altitudeData.htail_cd;
+                const vtailCd = altitudeData.vtail_cd;
+                const fusCd = altitudeData.fus_cd;
+                const wingCdi = altitudeData.wing_cdi;
+                const htailCdi = altitudeData.htail_cdi;
+                const fusCdi = altitudeData.fus_cdi;
+                const lgCd = altitudeData.lg_cd;
+                const nacCd = altitudeData.nac_cd;
+                const plyCd = altitudeData.ply_cd;
+                const miscCd = altitudeData.misc_cd;
+                const totalCd = altitudeData.total_cd;
+
+                // Populate the table rows
+                machNumbers.forEach((mach, index) => {
+                    const row = tableBody.insertRow();
+                    const machCell = row.insertCell(0);
+                    const wingCdCell = row.insertCell(1);
+                    const htailCdCell = row.insertCell(2);
+                    const vtailCdCell = row.insertCell(3);
+                    const fusCdCell = row.insertCell(4);
+                    const wingCdiCell = row.insertCell(5);
+                    const htailCdiCell = row.insertCell(6);
+                    const fusCdiCell = row.insertCell(7);
+                    const lgCdCell = row.insertCell(8);
+                    const nacCdCell = row.insertCell(9);
+                    const plyCdCell = row.insertCell(10);
+                    const miscCdCell = row.insertCell(11);
+                    const totalCdCell = row.insertCell(12);
+
+                    // Fill cells with data, reducing decimal places where needed
+                    machCell.textContent = mach.toFixed(2); // Mach number to 2 decimal places
+                    wingCdCell.textContent = wingCd[index].toFixed(6); // Wing CDo
+                    htailCdCell.textContent = htailCd[index].toFixed(6); // Horizontal Stabilizer CDo
+                    vtailCdCell.textContent = vtailCd[index].toFixed(6); // Vertical Stabilizer CDo
+                    fusCdCell.textContent = fusCd[index].toFixed(6); // Fuselage CDo
+                    wingCdiCell.textContent = wingCdi[index].toFixed(6); // Wing CDi
+                    htailCdiCell.textContent = htailCdi[index].toFixed(6); // Horizontal Stabilizer CDi
+                    fusCdiCell.textContent = fusCdi[index].toFixed(6); // Fuselage CDi
+                    lgCdCell.textContent = lgCd[index].toFixed(6); // Landing Gear CD
+                    nacCdCell.textContent = nacCd[index].toFixed(6); // Nacelle CD
+                    plyCdCell.textContent = plyCd[index].toFixed(6); // Pylon CD
+                    miscCdCell.textContent = miscCd[index].toFixed(6); // Miscellaneous CD
+                    totalCdCell.textContent = totalCd[index].toFixed(6); // Total Drag Coefficient
+                });
+            }
         }
-    </script>
+
+    
+        // Initialize the table on page load
+        window.onload = updateTable;
+        function downloadTableAsCSV() {
+            const selectedAltitude = document.getElementById("altitudeDropdown").value;
+            const tableData = JSON.parse(document.getElementById("tableData").textContent);
+
+            // Check if the selected altitude exists in the data
+            if (!(selectedAltitude in tableData)) {
+                alert("No data available for the selected altitude.");
+                return;
+            }
+
+            const altitudeData = tableData[selectedAltitude];
+            const machNumbers = altitudeData.mach;
+            const wingCd = altitudeData.wing_cd;
+            const htailCd = altitudeData.htail_cd;
+            const vtailCd = altitudeData.vtail_cd;
+            const fusCd = altitudeData.fus_cd;
+            const wingCdi = altitudeData.wing_cdi;
+            const htailCdi = altitudeData.htail_cdi;
+            const fusCdi = altitudeData.fus_cdi;
+            const lgCd = altitudeData.lg_cd;
+            const nacCd = altitudeData.nac_cd;
+            const plyCd = altitudeData.ply_cd;
+            const miscCd = altitudeData.misc_cd;
+            const totalCd = altitudeData.total_cd;
+
+            // Create CSV content
+            let csvContent = "Mach Number,Wing CDo,Horizontal Stabilizer CDo,Vertical Stabilizer CDo,Fuselage CDo,Wing CDi,Horizontal Stabilizer CDi,Fuselage CDi,Landing Gear CD,Nacelle CD,Pylon CD,Miscellaneous CD,Total Drag Coefficient\n";
+
+            machNumbers.forEach((mach, index) => {
+                csvContent += `${mach.toFixed(2)},${wingCd[index].toFixed(6)},${htailCd[index].toFixed(6)},${vtailCd[index].toFixed(6)},${fusCd[index].toFixed(6)},${wingCdi[index].toFixed(6)},${htailCdi[index].toFixed(6)},${fusCdi[index].toFixed(6)},${lgCd[index].toFixed(6)},${nacCd[index].toFixed(6)},${plyCd[index].toFixed(6)},${miscCd[index].toFixed(6)},${totalCd[index].toFixed(6)}\n`;
+            });
+
+            // Create a downloadable link
+            const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = `Drag_Coefficient_${selectedAltitude}_ft.csv`;
+            link.style.display = "none";
+
+            // Append link to the document and trigger the download
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+    </script>    
 </head>
 <body>
     <h1>Drag Coefficient Results</h1>
@@ -26,20 +122,38 @@
     </div>
     
     <br><br>
-    <h2>Select Altitude</h2>
+    <h2>Drag Coefficient Table</h2>
     <select id="altitudeDropdown" onchange="updateTable()">
         {% for altitude in drag_data.keys() %}
         <option value="{{ altitude }}">{{ altitude }} ft</option>
         {% endfor %}
     </select>
-
-    <h2>Total Drag Coefficient Table</h2>
+    <br><br>
+    <button onclick="downloadTableAsCSV()">Download Table as CSV</button>
+    <br><br>
     <table id="dragTable" border="1">
-        <tr>
-            <th>Mach Number</th>
-            <th>Total Drag Coefficient</th>
-        </tr>
+        <thead>
+            <tr>
+                <th>Mach Number</th>
+                <th>Wing CDo</th>
+                <th>Horizontal Stabilizer CDo</th>
+                <th>Vertical Stabilizer CDo</th>
+                <th>Fuselage CDo</th>
+                <th>Wing CDi</th>
+                <th>Horizontal Stabilizer CDi</th>
+                <th>Fuselage CDi</th>
+                <th>Landing Gear CD</th>
+                <th>Nacelle CD</th>
+                <th>Pylon CD</th>
+                <th>Miscellaneous CD</th>
+                <th>Total Drag Coefficient</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data will be populated here by JavaScript -->
+        </tbody>
     </table>
+
 
     <!-- Hidden data for JavaScript -->
     <script type="application/json" id="tableData">{{ drag_data | tojson }}</script>

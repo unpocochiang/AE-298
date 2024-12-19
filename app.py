@@ -23,7 +23,8 @@ import CDo_ply
 def graph_generator(mach, drag_data):
     # Create a line trace for each name
     traces = []
-    for altitude, coefficients in drag_data.items():
+    for altitude, data in drag_data.items():
+        coefficients =data['total_cd']
         # Create a line trace
         trace = go.Scatter(x=mach, y=coefficients, mode='lines+markers', name=f'{altitude} ft')
         traces.append(trace)
@@ -78,7 +79,9 @@ def calculate():
 
     #Fuslage
     l_fus = float(request.form["l_fus"]) #ft this include the tip of the propeller
-    S_fus_wet = float(request.form["s_fus_wet"]) #ft2
+    S_fus_plan_side = float(request.form["S_fus_plan_side"]) #ft2 #fuselag side planform view
+    S_fus_plan_top = float(request.form["S_fus_plan_top"]) #ft2 #fuselag top planform view
+    S_fus_wet = 3.4*(S_fus_plan_top+S_fus_plan_side)/2
     d_fus = float(request.form["d_fus"]) #ft
     S_fus_maxfront = float(request.form["s_fus_maxfront"]) #ft2 #front view
     S_fus_plan = float(request.form["S_fus_plan"]) #ft2
@@ -92,18 +95,23 @@ def calculate():
     L_c_4_h =  float(request.form["L_c_4_h"]) #c/4, deg #top view
     S_h = float(request.form["s_h"])  #ft2 #APM #!!!Have to double check
     AR_h = (b_h**2)/S_h 
-    taper_h = c_tip_h/c_root_h
     tc_max_h = float(request.form["d_fus_b"]) #top view
     tc_avg_h = float(request.form["tc_avg_h"])
     S_h_expo = float(request.form["s_h_expo"]) # ft2
-    S_h_wet = S_h_expo*(1.977+0.52*tc_avg_h)# #ft2 # Eq 7.12 Raymer 6th Ed. 
+    if tc_avg_h > 0.05:
+        S_h_wet =  S_h_expo*(1.977+0.52*tc_avg_h)# #ft2 # Eq 7.12 Raymer 6th Ed. 
+    else:
+        S_h_wet =  S_h_expo*2.003# #ft2 # Eq 7.12 Raymer 6th Ed.
     tc_max_loc_h = float(request.form["tc_max_loc_h"]) #top view of Vtail
     
     #V_Stab Data
-    V_stab_area = float(request.form["v_stab_area"]) #ft^2 # My calculation shows the reference area to be 12.5945867091379
-    S_v_wet =  float(request.form["s_v_wet"]) #S_v_expo*(1.977+0.52*tc_avg_v)# #ft2 # Eq 7.12 Raymer 6th Ed.
-    tc_max_v = float(request.form["tc_max_v"]) #top view #NACA0012
     tc_avg_v = float(request.form["tc_avg_v"])
+    S_v_expo = float(request.form['S_v_expo'])
+    if tc_avg_v > 0.05:
+        S_v_wet =  S_v_expo*(1.977+0.52*tc_avg_v)# #ft2 # Eq 7.12 Raymer 6th Ed.
+    else:
+        S_v_wet =  S_v_expo*2.003# #ft2 # Eq 7.12 Raymer 6th Ed.
+    tc_max_v = float(request.form["tc_max_v"]) #top view #NACA0012
     tc_max_loc_v = float(request.form["tc_max_loc_v"]) #top view
     L_c_4_v = float(request.form["L_c_4_v"]) #c/4, deg
     c_tip_v = float(request.form["c_tip_v"]) #ft #side view
@@ -138,6 +146,7 @@ def calculate():
         d_nac = 1
         pylon_arrangement = 1
         l_pyl = 1
+        t_nac = 1
 
 
 
@@ -228,8 +237,34 @@ def calculate():
             total_CD_val[k] = CD_lg_val[k] + CD_misc_val[k] + CDi_fus_val[k] + CDi_htail_val[k] + CDi_wing_val[k] + CDo_fus_val[k] 
             + CDo_htail_val[k] + CDo_vtail_val[k] + CDo_wing_val[k] + CDo_nac_val[k] + CDo_ply_val[k]
             
-        total_CD_val = total_CD_val.tolist()
-        drag_data[alt] = total_CD_val
+        total_CD_val = np.nan_to_num(total_CD_val, nan=0.0, posinf=1.0, neginf=-1.0).tolist()
+        CDo_wing_val = np.nan_to_num(CDo_wing_val, nan=0.0, posinf=1.0, neginf=-1.0).tolist()
+        CD_lg_val = np.nan_to_num(CD_lg_val, nan=0.0, posinf=1.0, neginf=-1.0).tolist()
+        CD_misc_val = np.nan_to_num(CD_misc_val, nan=0.0, posinf=1.0, neginf=-1.0).tolist()
+        CDi_fus_val = np.nan_to_num(CDi_fus_val, nan=0.0, posinf=1.0, neginf=-1.0).tolist()
+        CDi_htail_val = np.nan_to_num(CDi_htail_val, nan=0.0, posinf=1.0, neginf=-1.0).tolist()
+        CDi_wing_val = np.nan_to_num(CDi_wing_val, nan=0.0, posinf=1.0, neginf=-1.0).tolist()
+        CDo_fus_val = np.nan_to_num(CDo_fus_val, nan=0.0, posinf=1.0, neginf=-1.0).tolist()
+        CDo_htail_val = np.nan_to_num(CDo_htail_val, nan=0.0, posinf=1.0, neginf=-1.0).tolist()
+        CDo_vtail_val = np.nan_to_num(CDo_vtail_val, nan=0.0, posinf=1.0, neginf=-1.0).tolist()
+        CDo_nac_val = np.nan_to_num(CDo_nac_val, nan=0.0, posinf=1.0, neginf=-1.0).tolist()
+        CDo_ply_val =np.nan_to_num(CDo_ply_val, nan=0.0, posinf=1.0, neginf=-1.0).tolist()
+
+        drag_data[alt] = {
+            "mach": mach,
+            "wing_cd": CDo_wing_val,
+            "lg_cd": CD_lg_val,
+            "misc_cd": CD_misc_val,
+            "fus_cdi": CDi_fus_val,
+            "htail_cdi": CDi_htail_val,
+            "wing_cdi": CDi_wing_val,
+            "fus_cd": CDo_fus_val,
+            "htail_cd": CDo_htail_val,
+            "vtail_cd": CDo_vtail_val,
+            "nac_cd": CDo_nac_val,
+            "ply_cd": CDo_ply_val,
+            "total_cd": total_CD_val
+        }
 
     drag_html = graph_generator(mach, drag_data)
     return render_template("result.html", drag_html=drag_html, drag_data=drag_data, mach=mach)
