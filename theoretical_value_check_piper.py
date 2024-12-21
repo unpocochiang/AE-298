@@ -65,11 +65,11 @@ def theoretical_Cd_calc(m):
                                                     Piper_Archer_III_data.c_tip, Piper_Archer_III_data.c_root, Piper_Archer_III_data.c_l_alpha, 
                                                     Piper_Archer_III_data.takeoff_weight, Piper_Archer_III_data.S_wing)
     CDi_htail_val = CDi_wing.induced_drag_htail(Piper_Archer_III_data.AR_h,Piper_Archer_III_data.S_h,Piper_Archer_III_data.S_wing,Piper_Archer_III_data.takeoff_weight,
-                                                        density,vinf,Piper_Archer_III_data.S_wing)
+                                                        density,vinf)
     # might need to double check with ERJ-Data
     CDi_fus_val = CDi_wing.fuse_induced_drag(Piper_Archer_III_data.c_l_0,Piper_Archer_III_data.l_fus,Piper_Archer_III_data.d_fus,m,Piper_Archer_III_data.S_wing,
                                                         Piper_Archer_III_data.S_fus_plan,Piper_Archer_III_data.S_fus_b,
-                                                        Piper_Archer_III_data.takeoff_weight, density, vinf, Piper_Archer_III_data.S_wing, 
+                                                        Piper_Archer_III_data.takeoff_weight, density, vinf, 
                                                         Piper_Archer_III_data.b_wing, Piper_Archer_III_data.c_tip,
                                                         Piper_Archer_III_data.c_root,Piper_Archer_III_data.c_l_alpha,
                                                         Piper_Archer_III_data.AR,Piper_Archer_III_data.L_c_4_wing)
@@ -131,6 +131,7 @@ plt.xlabel('Mach Speed')
 plt.ylabel('Percentage Error (%)')
 plt.grid(True)
 plt.axhline(0, color='r', linestyle='--')  # Add a line at y=0 for reference
+plt.ylim(-10, 10) 
 plt.legend()
 plt.show()
 

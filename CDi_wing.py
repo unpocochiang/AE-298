@@ -66,8 +66,8 @@ def R_LE_suct_param(mach,rho,vinf,rle,mu,AR,Span,Sweep,ctip,croot):
         e = np.array([-19.774724, -20.944706, -20.495264, -20.770602, -20.826379])
         for i in range(0,5):
             R[i]=a[i]+b[i]*Rele+c[i]*Rele**2.5+d[i]*Rele**3+e[i]/np.log(Rele)
-    ARLam = np.array([0, 1, 2, 4, 10])
-    Rsucrat=np.interp(ARLambda, ARLam, R)
+        ARLam = np.array([0, 1, 2, 4, 10])
+        Rsucrat=np.interp(ARLambda, ARLam, R)
     R_LE_suct_param=Rsucrat
     return R_LE_suct_param
 
@@ -215,19 +215,19 @@ def CDi_wing_calc(mach, AR, Sweep, taper, rho, vinf, rle, mu, Span, ctip, croot,
     CDiw=(CL_w**2)/(np.pi*AR*spaneff)+2*np.pi*CL_w*(eta_t*np.pi/180)*v + 4*np.pi*np.pi*(eta_t*np.pi/180)**2*w
     return CDiw
 
-def induced_drag_htail(AR_H,Sref_H,Wsref,W,rho,vinf,sref):
+def induced_drag_htail(AR_H,Sref_H,Wsref,W,rho,vinf):
     #eH=0.7 #mounted on vertical tail
     eH=0.5 #mounted on body
-    CL = CL_calc(W, rho, vinf, sref)
+    CL = CL_calc(W, rho, vinf, Wsref)
     CL_h  = -CL*0.05*(Sref_H/Wsref)
     CDi_h=(CL_h**2)/(np.pi*AR_H*eH)
     return CDi_h
 
-def fuse_induced_drag(Clo,lfus,dfus,mach,Wsref,Sfplan,Sb_fuse,W, rho, vinf, sref,Span,ctip,croot,Cl_alpha,AR,Sweep):
+def fuse_induced_drag(Clo,lfus,dfus,mach,Wsref,Sfplan,Sb_fuse,W, rho, vinf,Span,ctip,croot,Cl_alpha,AR,Sweep):
     # Calculate CDi for the fuselage
     # From Roskam Section 4.3.1.2
     # make a guess at fuselage alpha
-    CL = CL_calc(W, rho, vinf, sref)
+    CL = CL_calc(W, rho, vinf, Wsref)
     CL_alpha_w_val = CL_alpha_w(mach,Span,ctip,croot,Cl_alpha,AR,Sweep)
     alpha=((CL - Clo)/CL_alpha_w_val)
     #

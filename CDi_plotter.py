@@ -82,9 +82,9 @@ def AtmosphereFunction(h_G):          #Atmosphere Function
 
 # Now we initialize our values, and calculate!
 #mach = np.linspace(0.01, 0.8, 100) # Mach Number
-mach = np.array([0.1, 0.15, 0.2, 0.25, 0.3, 0.4, 0.5,0.51,0.52,0.53,0.54,0.55,0.56,0.57,0.58,0.59,0.6,0.7])
+mach = np.array([0.1, 0.15, 0.2, 0.25, 0.3, 0.4, 0.5,0.51,0.52,0.53,0.54,0.55,0.56,0.57,0.58,0.59,0.6,0.7, 0.75, 0.8])
 # altitude = np.arange(0., 55000., 5000.) # ft
-altitude = np.array([0., 6666., 13333., 20000, 26666, 33333,40000])
+altitude = np.array([0., 5000, 10000,15000,20000,25000,30000,35000,40000,45000,50000])
 mach_size = np.size(mach)
 
 
@@ -114,8 +114,15 @@ for i, alt in enumerate(altitude):
         #sref and wref may be both s_wing
         # visc is just mu #kinematic viscosity
         vinf = m * speed_of_sound
-        CDi_wing_val[k] = CDi_wing.CDi_wing_calc(m, erj_data.AR, erj_data.L_c_4_wing, erj_data.taper, density, vinf, erj_data.rle, visc, erj_data.b_wing, erj_data.c_tip, 
-                                                 erj_data.c_root, erj_data.cl_alpha, erj_data.weight, erj_data.S_wing)
+        cdi_fus = CDi_wing.fuse_induced_drag(erj_data.cl_o,erj_data.l_fus,erj_data.d_fus,m,erj_data.S_wing,erj_data.S_fus_plan,
+                                     erj_data.S_fus_b,erj_data.weight, 
+                                     density, vinf, erj_data.b_wing,erj_data.c_tip, erj_data.c_root,erj_data.cl_alpha,
+                                     erj_data.AR, erj_data.L_c_4_wing)
+        cdi_htail = CDi_wing.induced_drag_htail(erj_data.AR_h,erj_data.S_h, erj_data.S_wing,erj_data.weight,density,vinf,)
+        cdi_wing = CDi_wing.CDi_wing_calc(m, erj_data.AR, erj_data.L_c_4_wing, erj_data.taper, density, vinf, erj_data.rle, visc, 
+                                        erj_data.b_wing, erj_data.c_tip, erj_data.c_root, erj_data.cl_alpha, erj_data.weight, erj_data.S_wing)
+        CDi_wing_val[k] = cdi_htail + cdi_fus + cdi_wing
+
 
         #print(f'Mach: {m}')
         print(f'CDo_wing: {CDi_wing_val[k]}')
@@ -127,5 +134,6 @@ for i, alt in enumerate(altitude):
 plt.title('CDi_wing') # gonna do some LaTeX stuff with this in a bit, but this is a proof of concept lol
 plt.xlabel('Mach Number')
 plt.ylabel('CDo_wing')
+plt.ylim(0, 0.9)
 plt.legend()
 plt.show()

@@ -123,11 +123,11 @@ def theoretical_Cd_calc(m,alt):
                                                     SR_20_data.c_tip, SR_20_data.c_root, SR_20_data.c_l_alpha, 
                                                     SR_20_data.takeoff_weight, SR_20_data.S_wing)
     CDi_htail_val = CDi_wing.induced_drag_htail(SR_20_data.AR_h,SR_20_data.S_h,SR_20_data.S_wing,SR_20_data.takeoff_weight,
-                                                        density,vinf,SR_20_data.S_wing)
+                                                        density,vinf)
     # might need to double check with ERJ-Data
     CDi_fus_val = CDi_wing.fuse_induced_drag(SR_20_data.c_l_0,SR_20_data.l_fus,SR_20_data.d_fus,m,SR_20_data.S_wing,
                                                         SR_20_data.S_fus_plan,SR_20_data.S_fus_b,
-                                                        SR_20_data.takeoff_weight, density, vinf, SR_20_data.S_wing, 
+                                                        SR_20_data.takeoff_weight, density, vinf, 
                                                         SR_20_data.b_wing, SR_20_data.c_tip,
                                                         SR_20_data.c_root,SR_20_data.c_l_alpha,
                                                         SR_20_data.AR,SR_20_data.L_c_4_wing)
@@ -203,7 +203,7 @@ plt.title('Percentage Error of CD vs. Mach Speed for Different Altitudes')
 plt.xlabel('Mach Speed')
 plt.ylabel('Percentage Error (%)')
 plt.axhline(0, color='r', linestyle='--', label='Zero Error')  # Reference line at y=0
-plt.ylim(-10, 10)  # Restrict y-axis from -10 to 10
+#plt.ylim(-10, 10) 
 plt.grid(True)
 plt.legend()
 plt.show()
