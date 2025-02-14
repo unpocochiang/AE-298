@@ -1,17 +1,25 @@
-import atmosphere_function
-import erj_data
-import CDi_wing
+import re
+import requests
+import pandas as pd
+from io import StringIO
 
-h_G, h, T, P, rho, speed_of_sound,mu = atmosphere_function.AtmosphereFunction(40000)
-mach = 0.6
-vinf = mach * speed_of_sound
+# URL of the CSV file
+airfoil_name = 'marske7-il'
+re = 50000
+url = f'http://airfoiltools.com/polar/csv?polar=xf-{airfoil_name}-{re}'
 
-cdi_fus = CDi_wing.fuse_induced_drag(erj_data.cl_o,erj_data.l_fus,erj_data.d_fus,mach,erj_data.S_wing,erj_data.S_fus_plan,
-                                     erj_data.S_fus_b,erj_data.weight, 
-                                     rho, vinf, erj_data.b_wing,erj_data.c_tip, erj_data.c_root,erj_data.cl_alpha,
-                                     erj_data.AR, erj_data.L_c_4_wing)
-cdi_htail = CDi_wing.induced_drag_htail(erj_data.AR_h,erj_data.S_h, erj_data.S_wing,erj_data.weight,rho,vinf,)
-cdi_wing = CDi_wing.CDi_wing_calc(mach, erj_data.AR, erj_data.L_c_4_wing, erj_data.taper, rho, vinf, erj_data.rle, mu, 
-                                  erj_data.b_wing, erj_data.c_tip, erj_data.c_root, erj_data.cl_alpha, erj_data.weight, erj_data.S_wing)
-cdi = cdi_htail + cdi_fus + cdi_wing
-print(cdi)
+# Send GET request
+response = requests.get(url)
+
+if response.status_code == 200:
+    # Convert response text into a readable format
+    csv_data = StringIO(response.text)
+    
+    # Read CSV, skipping metadata
+    df = pd.read_csv(csv_data, skiprows=10)
+
+    # Save DataFrame to CSV file
+    filename = f'{airfoil_name}_{re}.csv'
+    df.to_csv(filename, index=False)
+else:
+    print("Failed to download CSV. Status Code:", response.status_code)
