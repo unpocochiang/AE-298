@@ -271,7 +271,7 @@
                 });
             });
         
-            fetch("/populate_wing", {
+            fetch("{{ url_for('populate_wing') }}", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ sections: sections })
