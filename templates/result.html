@@ -27,6 +27,9 @@
                 const plyCd = altitudeData.ply_cd;
                 const miscCd = altitudeData.misc_cd;
                 const totalCd = altitudeData.total_cd;
+                const totalCl = altitudeData.cl_calc;
+                const avlcl = altitudeData.avl_cl;
+                const avlcdi = altitudeData.avl_cdi;
 
                 // Populate the table rows
                 machNumbers.forEach((mach, index) => {
@@ -44,6 +47,9 @@
                     const plyCdCell = row.insertCell(10);
                     const miscCdCell = row.insertCell(11);
                     const totalCdCell = row.insertCell(12);
+                    const totalClCell = row.insertCell(13);
+                    const avlClCell = row.insertCell(14);
+                    const avlCdiCell = row.insertCell(15);
 
                     // Fill cells with data, reducing decimal places where needed
                     machCell.textContent = mach.toFixed(2); // Mach number to 2 decimal places
@@ -59,6 +65,9 @@
                     plyCdCell.textContent = plyCd[index].toFixed(6); // Pylon CD
                     miscCdCell.textContent = miscCd[index].toFixed(6); // Miscellaneous CD
                     totalCdCell.textContent = totalCd[index].toFixed(6); // Total Drag Coefficient
+                    totalClCell.textContent = totalCl[index].toFixed(2); // Total Drag Coefficient
+                    avlClCell.textContent = avlcl[index].toFixed(2); // Total Drag Coefficient
+                    avlCdiCell.textContent = avlcdi[index].toFixed(2); // Total Drag Coefficient
                 });
             }
         }
@@ -147,6 +156,9 @@
                 <th>Pylon CD</th>
                 <th>Miscellaneous CD</th>
                 <th>Total Drag Coefficient</th>
+                <th>CL Calc</th>
+                <th>AVL CL</th>
+                <th>AVL Cdi</th>
             </tr>
         </thead>
         <tbody>
@@ -159,7 +171,80 @@
     <script type="application/json" id="tableData">{{ drag_data | tojson }}</script>
     <script type="application/json" id="machNumbers">{{ mach | tojson }}</script>
 
+    <h2>Range Estimator</h2>
+    <p>Enter additional details to estimate range and endurance:</p>
+    
+    <form id="rangeForm" onsubmit="calculateRange(event)">
+        <label for="velocity">Velocity (ft/s):</label>
+        <input type="number" id="velocity" name="velocity" step="0.01" min="0.01" required>
+        <span id="velocityFeedback" class="feedback"></span><br><br>
+    
+        <label for="fuel_weight">Fuel Weight (lbs):</label>
+        <input type="number" id="fuel_weight" name="fuel_weight" step="0.01" min="0.01" required>
+        <span id="rangeOutput" class="feedback"></span><br><br>
+    
+        <label for="altitude">Altitude (ft):</label>
+        <input type="number" id="altitude" name="altitude" step="1" min="0" required>
+        <span id="enduranceOutput" class="feedback"></span><br><br>
+    
+        <button type="submit">Estimate</button>
+    </form>
+    
+    <script>
+    function calculateRange(event) {
+        event.preventDefault();
+    
+        const velocity = parseFloat(document.getElementById("velocity").value);
+        const fuel_weight = parseFloat(document.getElementById("fuel_weight").value);
+        const altitude = parseFloat(document.getElementById("altitude").value);
+    
+        fetch("{{ url_for('estimate_range') }}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                velocity,
+                fuel_weight,
+                altitude
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.range !== undefined && data.endurance !== undefined) {
+                document.getElementById("rangeOutput").textContent = `Range: ${data.range.toFixed(2)} mi`;
+                document.getElementById("enduranceOutput").textContent = `Endurance: ${data.endurance.toFixed(2)} hr`;
+            } else {
+                document.getElementById("rangeOutput").textContent = "Range: N/A";
+                document.getElementById("enduranceOutput").textContent = "Endurance: N/A";
+            }
+        })
+        .catch(error => {
+            console.error("Error estimating range:", error);
+            document.getElementById("rangeOutput").textContent = "Error";
+            document.getElementById("enduranceOutput").textContent = "Error";
+        });
+    }
+    </script>
+    
+    <style>
+    .feedback {
+        margin-left: 10px;
+        font-weight: bold;
+        color: green;
+    }
+    </style>
+    
+
+    <h2>Download Your Input as Python File</h2>
+    <form action="{{ url_for('download_input') }}" method="post">
+        {% for key, value in request.form.items() %}
+            <input type="hidden" name="{{ key }}" value="{{ value }}">
+        {% endfor %}
+        <button type="submit">Download Input as .py File</button>
+    </form>
+    
     <br><br>
-    <a href="/drag">Back to Input</a>
+    <a href="{{ url_for('index') }}">Back to Input</a>
 </body>
 </html>

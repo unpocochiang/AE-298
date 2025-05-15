@@ -29,135 +29,143 @@
 </head>
 <body>
     <h1>Aircraft Drag Coefficient Calculator</h1>
-    <form action="/drag/calculate" method="post">
+    <h2>Upload Input (.py) File</h2>
+    <form action="{{ url_for('upload_input') }}" method="post" enctype="multipart/form-data">
+        <label for="input_file">Select Python File:</label>
+        <input type="file" id="input_file" name="input_file" accept=".py" required>
+        <button type="submit">Upload</button>
+    </form>
+    <br><hr><br>
+
+    <form action="{{ url_for('calculate') }}" method="post">
         <h2>Aircraft General Specifications</h2>
         <label for="takeoff_weight">Takeoff Weight (lbs):</label>
-        <input type="number" id="takeoff_weight" name="takeoff_weight" step=".01" min="0.01" required><br><br>
+        <input type="number" id="takeoff_weight" name="takeoff_weight" step=".01" min="0.01" required value="{{ prefill.takeoff_weight if prefill and 'takeoff_weight' in prefill else '' }}"><br><br>
 
         <label for="mach_min">Minimum Mach Number:</label>
-        <input type="number" id="mach_min" name="mach_min" step="0.01" min="0" max="1.0" required><br><br>
+        <input type="number" id="mach_min" name="mach_min" step="0.01" min="0" max="1.0" required value="{{ prefill.mach_min if prefill and 'mach_min' in prefill else '' }}"><br><br>
 
         <label for="mach_max">Maximum Mach Number:</label>
-        <input type="number" id="mach_max" name="mach_max" step="0.01" min="0.01" max="1.0" required><br><br>
+        <input type="number" id="mach_max" name="mach_max" step="0.01" min="0.01" max="1.0" required value="{{ prefill.mach_max if prefill and 'mach_max' in prefill else '' }}"><br><br>
 
         <label for="altitude">Minimum Altitude (ft):</label>
-        <input type="number" id="altitude_min" name="altitude_min" step="100" min="0" max="40000" required><br><br>
+        <input type="number" id="altitude_min" name="altitude_min" step="100" min="0" max="40000" required value="{{ prefill.altitude_min if prefill and 'altitude_min' in prefill else '' }}"><br><br>
 
         <label for="altitude">Maximum Altitude (ft):</label>
-        <input type="number" id="altitude_max" name="altitude_max" step="100" min="0" max="40000" required><br><br>
+        <input type="number" id="altitude_max" name="altitude_max" step="100" min="0" max="40000" required value="{{ prefill.altitude_max if prefill and 'altitude_max' in prefill else '' }}"><br><br>
 
         <h2>Wing Data</h2>
         <label for="b_wing">Wing Span (b, ft):</label>
-        <input type="number" id="b_wing" name="b_wing" step="0.01" min="0.01" required><br><br>
+        <input type="number" id="b_wing" name="b_wing" step="0.01" min="0.01" required value="{{ prefill.b_wing if prefill and 'b_wing' in prefill else '' }}"><br><br>
     
         <label for="s_wing">Wing Area (S, ft²):</label>
-        <input type="number" id="s_wing" name="s_wing" step="0.01" min="0.01" required><br><br>
+        <input type="number" id="s_wing" name="s_wing" step="0.01" min="0.01" required value="{{ prefill.s_wing if prefill and 's_wing' in prefill else '' }}"><br><br>
     
         <label for="s_wet">Wing Wetted Area (S_wet, ft²):</label>
-        <input type="number" id="s_wet" name="s_wet" step="0.01" min="0.01" required><br><br>
+        <input type="number" id="s_wet" name="s_wet" step="0.01" min="0.01" required value="{{ prefill.s_wet if prefill and 's_wet' in prefill else '' }}"><br><br>
         
         <label for="c_bar">c_bar (c_bar, ft):</label>
-        <input type="number" id="c_bar" name="c_bar" step="0.01" min="0.01" required><br><br>
+        <input type="number" id="c_bar" name="c_bar" step="0.01" min="0.01" required value="{{ prefill.c_bar if prefill and 'c_bar' in prefill else '' }}"><br><br>
 
         <label for="L_c_4_wing">L_c_4_wing (L_c_4_wing, deg):</label>
-        <input type="number" id="L_c_4_wing" name="L_c_4_wing" step="0.01" min="0.01" required><br><br>
+        <input type="number" id="L_c_4_wing" name="L_c_4_wing" step="0.01" min="0.01" required value="{{ prefill.L_c_4_wing if prefill and 'L_c_4_wing' in prefill else '' }}"><br><br>
 
         <label for="tc_avg">Thickness-to-Chord Ratio (t/c):</label>
-        <input type="number" id="tc_avg" name="tc_avg" step="0.01" required><br><br>
+        <input type="number" id="tc_avg" name="tc_avg" step="0.01" required value="{{ prefill.tc_avg if prefill and 'tc_avg' in prefill else '' }}"><br><br>
 
         <label for="tc_max_loc">Maximum Thickness-to-Chord Location(tc_max_loc):</label>
-        <input type="number" id="tc_max_loc" name="tc_max_loc" step="0.01" required><br><br>
+        <input type="number" id="tc_max_loc" name="tc_max_loc" step="0.01" required value="{{ prefill.tc_max_loc if prefill and 'tc_max_loc' in prefill else '' }}"><br><br>
         
         <label for="tc_max">Maximum Thickness-to-Chord (tc_max):</label>
-        <input type="number" id="tc_max" name="tc_max" step="0.01" required><br><br>
+        <input type="number" id="tc_max" name="tc_max" step="0.01" required value="{{ prefill.tc_max if prefill and 'tc_max' in prefill else '' }}"><br><br>
 
         <label for="c_tip">Tip Chord (c_tip, ft):</label>
-        <input type="number" id="c_tip" name="c_tip" step="0.01" min="0.01" required><br><br>
+        <input type="number" id="c_tip" name="c_tip" step="0.01" min="0.01" required value="{{ prefill.c_tip if prefill and 'c_tip' in prefill else '' }}"><br><br>
         
         <label for="c_root">Root Chord (c_root, ft):</label>
-        <input type="number" id="c_root" name="c_root" step="0.01" min="0.01" required><br><br>
+        <input type="number" id="c_root" name="c_root" step="0.01" min="0.01" required value="{{ prefill.c_root if prefill and 'c_root' in prefill else '' }}"><br><br>
 
         <h2>Fuselage Data</h2>
         <label for="l_fus">Fuselage Length (l_fus, ft):</label>
-        <input type="number" id="l_fus" name="l_fus" step="0.01" min="0.01" required><br><br>
+        <input type="number" id="l_fus" name="l_fus" step="0.01" min="0.01" required value="{{ prefill.l_fus if prefill and 'l_fus' in prefill else '' }}"><br><br>
     
         <label for="d_fus">Fuselage Diameter (d_fus, ft):</label>
-        <input type="number" id="d_fus" name="d_fus" step="0.01" min="0.01" required><br><br>
+        <input type="number" id="d_fus" name="d_fus" step="0.01" min="0.01" required value="{{ prefill.d_fus if prefill and 'd_fus' in prefill else '' }}"><br><br>
     
         <label for="S_fus_plan_top">Fuselage Top Planform Area (ft²):</label>
-        <input type="number" id="S_fus_plan_top" name="S_fus_plan_top" step="0.01" min="0.01" required><br><br>
+        <input type="number" id="S_fus_plan_top" name="S_fus_plan_top" step="0.01" min="0.01" required value="{{ prefill.S_fus_plan_top if prefill and 'S_fus_plan_top' in prefill else '' }}"><br><br>
         
         <label for="S_fus_plan_side">Fuselage Side Planform Area (ft²):</label>
-        <input type="number" id="S_fus_plan_side" name="S_fus_plan_side" step="0.01" min="0.01" required><br><br>
+        <input type="number" id="S_fus_plan_side" name="S_fus_plan_side" step="0.01" min="0.01" required value="{{ prefill.S_fus_plan_side if prefill and 'S_fus_plan_side' in prefill else '' }}"><br><br>
 
         <label for="s_fus_maxfront">Fuselage Max Cross-Sectional Area (ft²):</label>
-        <input type="number" id="s_fus_maxfront" name="s_fus_maxfront" step="0.01" min="0.01" required><br><br>
+        <input type="number" id="s_fus_maxfront" name="s_fus_maxfront" step="0.01" min="0.01" required value="{{ prefill.s_fus_maxfront if prefill and 's_fus_maxfront' in prefill else '' }}"><br><br>
         
         <label for="d_fus_b">Tailend Fuselage Diameter (ft):</label>
-        <input type="number" id="d_fus_b" name="d_fus_b" step="0.01" min="0.01" required><br><br>
+        <input type="number" id="d_fus_b" name="d_fus_b" step="0.01" min="0.01" required value="{{ prefill.d_fus_b if prefill and 'd_fus_b' in prefill else '' }}"><br><br>
 
         <h2>Airfoil Data</h2>
         <label for="c_l_alpha">Max Coefficient of Lift (c_l_alpha):</label>
-        <input type="number" id="c_l_alpha" name="c_l_alpha" step="0.01" min="0.01" required><br><br>
+        <input type="number" id="c_l_alpha" name="c_l_alpha" step="0.01" min="0.01" required value="{{ prefill.c_l_alpha if prefill and 'c_l_alpha' in prefill else '' }}"><br><br>
     
         <label for="c_l_0">Coefficient of Lift at 0 AoA (c_l_0):</label>
-        <input type="number" id="c_l_0" name="c_l_0" step="0.01" min="0.01" required><br><br>
+        <input type="number" id="c_l_0" name="c_l_0" step="0.01" min="0.01" required value="{{ prefill.c_l_0 if prefill and 'c_l_0' in prefill else '' }}"><br><br>
     
         <label for="rle">Leading Edge Radius (rle):</label>
-        <input type="number" id="rle" name="rle" step="0.01" min="0.01" required><br><br>
+        <input type="number" id="rle" name="rle" step="0.01" min="0.01" required value="{{ prefill.rle if prefill and 'rle' in prefill else '' }}"><br><br>
 
         <h2>Horizontal Stabilizer Data</h2>
         <label for="b_h">Horizontal Stabilizer Span (b_h, ft):</label>
-        <input type="number" id="b_h" name="b_h" step="0.01" min="0.01" required><br><br>
+        <input type="number" id="b_h" name="b_h" step="0.01" min="0.01" required value="{{ prefill.b_h if prefill and 'b_h' in prefill else '' }}"><br><br>
     
         <label for="s_h">Horizontal Stabilizer Area (S_h, ft²):</label>
-        <input type="number" id="s_h" name="s_h" step="0.01" min="0.01" required><br><br>
+        <input type="number" id="s_h" name="s_h" step="0.01" min="0.01" required value="{{ prefill.s_h if prefill and 's_h' in prefill else '' }}"><br><br>
         
         <label for="s_h_expo">Horizontal Stabilizer Exposed Area (S_h_expo, ft²):</label>
-        <input type="number" id="s_h_expo" name="s_h_expo" step="0.01" min="0.01" required><br><br>
+        <input type="number" id="s_h_expo" name="s_h_expo" step="0.01" min="0.01" required value="{{ prefill.s_h_expo if prefill and 's_h_expo' in prefill else '' }}"><br><br>
 
         <label for="c_root_h">Horizontal Stabilizer Root Chord (ft):</label>
-        <input type="number" id="c_root_h" name="c_root_h" step="0.01" min="0.01" required><br><br>
+        <input type="number" id="c_root_h" name="c_root_h" step="0.01" min="0.01" required value="{{ prefill.c_root_h if prefill and 'c_root_h' in prefill else '' }}"><br><br>
         
         <label for="c_tip_h">Horizontal Stabilizer Tip Chord (ft):</label>
-        <input type="number" id="c_tip_h" name="c_tip_h" step="0.01" min="0.01" required><br><br>
+        <input type="number" id="c_tip_h" name="c_tip_h" step="0.01" min="0.01" required value="{{ prefill.c_tip_h if prefill and 'c_tip_h' in prefill else '' }}"><br><br>
         
         <label for="L_c_4_h">Horizontal Stabilizer L_c_4_h (deg):</label>
-        <input type="number" id="L_c_4_h" name="L_c_4_h" step="0.01" min="0.01" required><br><br>
+        <input type="number" id="L_c_4_h" name="L_c_4_h" step="0.01" min="0.01" required value="{{ prefill.L_c_4_h if prefill and 'L_c_4_h' in prefill else '' }}"><br><br>
 
         <label for="tc_max_h">Horizontal Stabilizer Max t/c:</label>
-        <input type="number" id="tc_max_h" name="tc_max_h" step="0.01" required><br><br>
+        <input type="number" id="tc_max_h" name="tc_max_h" step="0.01" required value="{{ prefill.tc_max_h if prefill and 'tc_max_h' in prefill else '' }}"><br><br>
         
         <label for="tc_avg_h">Horizontal Stabilizer Average t/c:</label>
-        <input type="number" id="tc_avg_h" name="tc_avg_h" step="0.01" required><br><br>
+        <input type="number" id="tc_avg_h" name="tc_avg_h" step="0.01" required value="{{ prefill.tc_avg_h if prefill and 'tc_avg_h' in prefill else '' }}"><br><br>
 
         <label for="tc_max_loc_h">Horizontal Stabilizer Max t/c Location:</label>
-        <input type="number" id="tc_max_loc_h" name="tc_max_loc_h" step="0.01" required><br><br>
+        <input type="number" id="tc_max_loc_h" name="tc_max_loc_h" step="0.01" required value="{{ prefill.tc_max_loc_h if prefill and 'tc_max_loc_h' in prefill else '' }}"><br><br>
 
         <h2>Vertical Stabilizer Data</h2>
         <label for="S_v_expo">Vertical Stabilizer Exposed Area (ft²):</label>
-        <input type="number" id="S_v_expo" name="S_v_expo" step="0.01" min="0.01" required><br><br>
+        <input type="number" id="S_v_expo" name="S_v_expo" step="0.01" min="0.01" required value="{{ prefill.S_v_expo if prefill and 'S_v_expo' in prefill else '' }}"><br><br>
 
         <label for="b_v">Vertical Stabilizer Span (b_v, ft):</label>
-        <input type="number" id="b_v" name="b_v" step="0.01" min="0.01" required><br><br>
+        <input type="number" id="b_v" name="b_v" step="0.01" min="0.01" required value="{{ prefill.b_v if prefill and 'b_v' in prefill else '' }}"><br><br>
         
         <label for="L_c_4_v">L_c_4_v (deg):</label>
-        <input type="number" id="L_c_4_v" name="L_c_4_v" step="0.01" min="0.01" required><br><br>
+        <input type="number" id="L_c_4_v" name="L_c_4_v" step="0.01" min="0.01" required value="{{ prefill.L_c_4_v if prefill and 'L_c_4_v' in prefill else '' }}"><br><br>
 
         <label for="c_root_v">Vertical Stabilizer Root Chord (ft):</label>
-        <input type="number" id="c_root_v" name="c_root_v" step="0.01" min="0.01" required><br><br>
+        <input type="number" id="c_root_v" name="c_root_v" step="0.01" min="0.01" required value="{{ prefill.c_root_v if prefill and 'c_root_v' in prefill else '' }}"><br><br>
         
         <label for="c_tip_v">Vertical Stabilizer Tip Chord (ft):</label>
-        <input type="number" id="c_tip_v" name="c_tip_v" step="0.01" min="0.01" required><br><br>
+        <input type="number" id="c_tip_v" name="c_tip_v" step="0.01" min="0.01" required value="{{ prefill.c_tip_v if prefill and 'c_tip_v' in prefill else '' }}"><br><br>
 
         <label for="tc_max_v">Vertical Stabilizer Max t/c:</label>
-        <input type="number" id="tc_max_v" name="tc_max_v" step="0.01" required><br><br>
+        <input type="number" id="tc_max_v" name="tc_max_v" step="0.01" required value="{{ prefill.tc_max_v if prefill and 'tc_max_v' in prefill else '' }}"><br><br>
         
         <label for="tc_avg_v">Vertical Stabilizer Average t/c:</label>
-        <input type="number" id="tc_avg_v" name="tc_avg_v" step="0.01" required><br><br>
+        <input type="number" id="tc_avg_v" name="tc_avg_v" step="0.01" required value="{{ prefill.tc_avg_v if prefill and 'tc_avg_v' in prefill else '' }}"><br><br>
 
         <label for="tc_max_loc_v">Vertical Stabilizer Max t/c Location:</label>
-        <input type="number" id="tc_max_loc_v" name="tc_max_loc_v" step="0.01" required><br><br>
+        <input type="number" id="tc_max_loc_v" name="tc_max_loc_v" step="0.01" required value="{{ prefill.tc_max_loc_v if prefill and 'tc_max_loc_v' in prefill else '' }}"><br><br>
 
         <h2>Landing Gear</h2>
         <label for="has_landing_gear">
@@ -165,10 +173,10 @@
         </label><br><br>
 
         <label for="l_gear_flatplate">Landing Gear Flat Plate Length (ft):</label>
-        <input type="number" id="l_gear_flatplate" name="l_gear_flatplate" step="0.01" min="0.01" class="landing-gear-field" disabled><br><br>
+        <input type="number" id="l_gear_flatplate" name="l_gear_flatplate" step="0.01" min="0.01" class="landing-gear-field" disabled value="{{ prefill.l_gear_flatplate if prefill and 'l_gear_flatplate' in prefill else '' }}"><br><br>
     
         <label for="s_lg_front">Landing Gear Front Area (ft²):</label>
-        <input type="number" id="s_lg_front" name="s_lg_front" step="0.01" min="0.01" class="landing-gear-field" disabled><br><br>
+        <input type="number" id="s_lg_front" name="s_lg_front" step="0.01" min="0.01" class="landing-gear-field" disabled value="{{ prefill.s_lg_front if prefill and 's_lg_front' in prefill else '' }}"><br><br>
         
         <h2>Nacelle</h2>
         <label for="has_nacelle">
@@ -176,31 +184,155 @@
         </label><br><br>
 
         <label for="NumNac">Number of Nacelles:</label>
-        <input type="number" id="NumNac" name="NumNac" step="1" min="1" class="nacelle-field" disabled><br><br>
+        <input type="number" id="NumNac" name="NumNac" step="1" min="1" class="nacelle-field" disabled value="{{ prefill.NumNac if prefill and 'NumNac' in prefill else '' }}"><br><br>
     
         <label for="l_nac">Nacelle Length (ft²):</label>
-        <input type="number" id="l_nac" name="l_nac" step="0.01" min="0.01" class="nacelle-field" disabled><br><br>
+        <input type="number" id="l_nac" name="l_nac" step="0.01" min="0.01" class="nacelle-field" disabled value="{{ prefill.l_nac if prefill and 'l_nac' in prefill else '' }}"><br><br>
 
         <label for="d_nac">Nacelle Diameter (ft):</label>
-        <input type="number" id="d_nac" name="d_nac" step="0.01" min="0.01" class="nacelle-field" disabled><br><br>
+        <input type="number" id="d_nac" name="d_nac" step="0.01" min="0.01" class="nacelle-field" disabled value="{{ prefill.d_nac if prefill and 'd_nac' in prefill else '' }}"><br><br>
     
         <label for="S_nac_maxfront">Nacelle Front Surface Area (ft²):</label>
-        <input type="number" id="S_nac_maxfront" name="S_nac_maxfront" step="0.01" min="0.01" class="nacelle-field" disabled><br><br>
+        <input type="number" id="S_nac_maxfront" name="S_nac_maxfront" step="0.01" min="0.01" class="nacelle-field" disabled value="{{ prefill.S_nac_maxfront if prefill and 'S_nac_maxfront' in prefill else '' }}"><br><br>
 
         <label for="t_nac">Nacelle Thickness (ft):</label>
-        <input type="number" id="t_nac" name="t_nac" step="0.01" min="0.01" class="nacelle-field" disabled><br><br>
+        <input type="number" id="t_nac" name="t_nac" step="0.01" min="0.01" class="nacelle-field" disabled value="{{ prefill.t_nac if prefill and 't_nac' in prefill else '' }}"><br><br>
     
         <label for="NumPyl">Number of Pylon:</label>
-        <input type="number" id="NumPyl" name="NumPyl" step="1" min="1" class="nacelle-field" disabled><br><br>
+        <input type="number" id="NumPyl" name="NumPyl" step="1" min="1" class="nacelle-field" disabled value="{{ prefill.NumPyl if prefill and 'NumPyl' in prefill else '' }}"><br><br>
 
         <label for="pylon_arrangement">Pylon arrangement (Horizontal: 1, Vertical: 0):</label>
-        <input type="number" id="pylon_arrangement" name="pylon_arrangement" step="1" min="0" max="1" class="nacelle-field" disabled><br><br>
+        <input type="number" id="pylon_arrangement" name="pylon_arrangement" step="1" min="0" max="1" class="nacelle-field" disabled value="{{ prefill.pylon_arrangement if prefill and 'pylon_arrangement' in prefill else '' }}"><br><br>
     
         <label for="l_pyl">Pylon Length (ft):</label>
-        <input type="number" id="l_pyl" name="l_pyl" step="0.01" min="0.01" class="nacelle-field" disabled><br><br>
-    
+        <input type="number" id="l_pyl" name="l_pyl" step="0.01" min="0.01" class="nacelle-field" disabled value="{{ prefill.l_pyl if prefill and 'l_pyl' in prefill else '' }}"><br><br>
+        
+        <label for="w_py">Pylon Width (ft):</label>
+        <input type="number" id="w_py" name="w_py" step="0.01" min="0.01" class="nacelle-field" disabled value="{{ prefill.w_py if prefill and 'w_py' in prefill else '' }}"><br><br>
+        
+        <h2>Engine and Airfoil Info</h2>
+
+        <label for="engine_category">Engine Category:</label>
+        <select id="engine_category" name="engine_category" onchange="updateEngineOptions()" required>
+            <option value="">-- Select --</option>
+            <option value="jet" {{ 'selected' if prefill and prefill.engine_category == 'jet' else '' }}>Jet</option>
+            <option value="propeller" {{ 'selected' if prefill and prefill.engine_category == 'propeller' else '' }}>Propeller</option>
+        </select><br><br>
+        
+        <label for="engine_type">Engine Type:</label>
+        <select id="engine_type" name="engine_type" required>
+            <option value="">-- Select Engine Type --</option>
+            <option value="turboprop" {{ 'selected' if prefill and prefill.engine_type == 'turboprop' else '' }}>Turboprop</option>
+            <option value="high-bypass-turbofan" {{ 'selected' if prefill and prefill.engine_type == 'high-bypass-turbofan' else '' }}>High-Bypass Turbofan</option>
+            <option value="afterburning-turbofan" {{ 'selected' if prefill and prefill.engine_type == 'afterburning-turbofan' else '' }}>Afterburning Turbofan</option>
+            <option value="piston" {{ 'selected' if prefill and prefill.engine_type == 'piston' else '' }}>Piston</option>
+        </select><br><br>
+        
+        <label for="airfoil_name">Airfoil Name (e.g., NACA 2412):</label>
+        <input type="text" id="airfoil_name" name="airfoil_name" required value="{{ prefill.airfoil_name if prefill and 'airfoil_name' in prefill else '' }}"><br><br>
+        
         <button type="submit">Calculate</button>
     </form>
+
+    <h2>Wing Section Input</h2>
+    <div id="section-container"></div>
+    <button type="button" onclick="addSection()">Add Section</button>
+    <button type="button" onclick="populateWing()">Populate</button>
+    <br><br>
+    <div id="wing-preview"></div>
+
+    <script>
+        function addSection() {
+            const index = document.querySelectorAll(".section-input").length;
+            const html = `
+                <div class="section-input">
+                    <h4>Section ${index + 1}</h4>
+                    X: <input type="number" step="0.01" name="x">
+                    Y: <input type="number" step="0.01" name="y">
+                    Z: <input type="number" step="0.01" name="z">
+                    Chord: <input type="number" step="0.01" name="chord">
+                    Airfoil: <input type="text" name="airfoil">
+                </div>
+            `;
+            document.getElementById("section-container").insertAdjacentHTML('beforeend', html);
+        }
+        
+        function populateWing() {
+            const inputs = document.querySelectorAll(".section-input");
+            const sections = [];
+        
+            inputs.forEach(div => {
+                sections.push({
+                    x: parseFloat(div.querySelector("input[name='x']").value),
+                    y: parseFloat(div.querySelector("input[name='y']").value),
+                    z: parseFloat(div.querySelector("input[name='z']").value),
+                    chord: parseFloat(div.querySelector("input[name='chord']").value),
+                    airfoil: div.querySelector("input[name='airfoil']").value.trim()
+                });
+            });
+        
+            fetch("/populate_wing", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ sections: sections })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.image) {
+                    document.getElementById("wing-preview").innerHTML = `<img src="${data.image}" alt="Wing Preview">`;
+                } else {
+                    document.getElementById("wing-preview").innerText = "Failed to generate plot.";
+                }
+            });
+        }
+    </script>
+        
     
 </body>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const prefilledSections = {{ wing_sections | default([]) | tojson | safe }};
+        prefilledSections.forEach((section, index) => {
+            const html = `
+                <div class="section-input">
+                    <h4>Section ${index + 1}</h4>
+                    X: <input type="number" step="0.01" name="x" value="${section.x}">
+                    Y: <input type="number" step="0.01" name="y" value="${section.y}">
+                    Z: <input type="number" step="0.01" name="z" value="${section.z}">
+                    Chord: <input type="number" step="0.01" name="chord" value="${section.chord}">
+                    Airfoil: <input type="text" name="airfoil" value="${section.airfoil || ''}">
+                    <br><br>
+                </div>
+            `;
+            document.getElementById("section-container").insertAdjacentHTML('beforeend', html);
+        });
+    });
+</script>
+
+<script>
+    function updateEngineOptions() {
+        const engineCategory = document.getElementById("engine_category").value;
+        const engineTypeSelect = document.getElementById("engine_type");
+
+        // Clear current options
+        engineTypeSelect.innerHTML = '<option value="">-- Select Engine Type --</option>';
+
+        let options = [];
+
+        if (engineCategory === "jet") {
+            options = ["Turboprop", "High-Bypass Turbofan", "Afterburning Turbofan"];
+        } else if (engineCategory === "propeller") {
+            options = ["Turboprop", "Piston"];
+        }
+
+        options.forEach(type => {
+            const option = document.createElement("option");
+            option.value = type.toLowerCase().replace(/\s+/g, "-");
+            option.text = type;
+            engineTypeSelect.appendChild(option);
+        });
+    }
+</script>
+
 </html>

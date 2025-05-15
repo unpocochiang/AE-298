@@ -55,6 +55,8 @@ def R_LE_suct_param(mach,rho,vinf,rle,mu,AR,Span,Sweep,ctip,croot):
     Rsucrat=0
     taper=ctip/croot
     ARLambda=AR*taper/np.cos(Sweep_LE*np.pi/180)
+    # print(f'Rele: {Rele}')
+    # print(f'ARLambda: {ARLambda}')
     R=np.zeros(5)
     if (Rele>=1.3e+5):
         Rsucrat=(0.8631975+0.65931724*ARLambda-0.015271903*ARLambda**2)/(1+0.66823168*ARLambda-0.016799564*ARLambda**2+0.00010212808*ARLambda**3)
@@ -202,6 +204,7 @@ def v_w_factor(AR,mach,Sweep,taper):
 
 def spaneff_factor(CL_alpha_w,AR,R_LE_suct_param):
     spaneff=1.1*((CL_alpha_w*180/np.pi)/AR)/(R_LE_suct_param*((CL_alpha_w*180/np.pi)/AR)+(1-R_LE_suct_param)*np.pi)
+    # print(f'spaneff: {spaneff}')
     return spaneff
 
 def CDi_wing_calc(mach, AR, Sweep, taper, rho, vinf, rle, mu, Span, ctip, croot, Cl_alpha, W, sref):

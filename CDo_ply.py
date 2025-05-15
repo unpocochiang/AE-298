@@ -6,6 +6,8 @@ import fcn
 tc_average = 0.6
 
 def check_pylon_arrangement(pylon_arrangement):
+    # 1 for horizontal config
+    
     horiz=1
     vert=0
 
@@ -17,9 +19,7 @@ def check_pylon_arrangement(pylon_arrangement):
         vert=1
     return horiz, vert
 
-def Est_pylon_wet_area(t_nac, dn,l_py):
-    w_py = abs((t_nac - .5*dn))
-
+def Est_pylon_wet_area(w_py,l_py):
     S_wet_pylon = 2*l_py*w_py
     return S_wet_pylon, w_py
 
@@ -55,13 +55,13 @@ def trans_vtail_Cdo_cdw(re, tc_avg, sref, swet, mach, weight, vinf, rho, sweep, 
     CDw_vtail = CDo_vtail.CalcCDwave(mach,weight,vinf,rho,sweep,tcmax,ctip,croot,sref,span)
     return CDo_vtail_trans_val + CDw_vtail
 
-def CDo_ply(num_ply, pylon_arrangement,t_nac, dn,l_py,re, mach, sref,weight,vinf, rho,ctip, croot):
+def CDo_ply(num_ply, pylon_arrangement,w_py, l_py,re, mach, sref,weight,vinf, rho,ctip, croot):
     tc_avg = 0.06 #set value by Dr.Elle. Im not sure where it came from
     htail_sweep = 50
     vtail_sweep = 50
     tcmax = 0.15
     horiz, vert = check_pylon_arrangement(pylon_arrangement)
-    swet, w_py= Est_pylon_wet_area(t_nac, dn,l_py)
+    swet, w_py= Est_pylon_wet_area(w_py,l_py)
     sub_htail_Cdo_val = sub_htail_Cdo(re, mach, sref, swet, tc_avg, htail_sweep)
     trans_htail_Cdo_Cdw_val = trans_htail_Cdo_Cdw(re, tc_avg, sref, swet, mach, weight, vinf, rho, htail_sweep, tcmax, ctip, croot, w_py)
     sub_vtail_Cdo_val = sub_vtail_Cdo(re, mach, sref, swet, tc_avg, vtail_sweep)

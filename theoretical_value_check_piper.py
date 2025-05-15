@@ -13,6 +13,8 @@ import CDi_wing
 import CD_misc
 import CD_lg
 import re_calc
+import CDo_nac
+import CDo_ply
 
 def real_Cd_calc(mach):
     # altitude is 3500ft
@@ -76,14 +78,36 @@ def theoretical_Cd_calc(m):
     # might need to double check with ERJ-Data
     CD_misc_cons = 0.05
     CDo_pyl = 0
-    CDo_nac = 0
-    CD_misc_val = CD_misc.CD_misc_calc(CDo_pyl,CDo_fus_val,CDo_wing_val,CDo_nac,CDo_vtail_val,CDo_htail_val,CD_misc_cons)
+    CDo_nac_val = 0
+    CD_misc_val = CD_misc.CD_misc_calc(CDo_pyl,CDo_fus_val,CDo_wing_val,CDo_nac_val,CDo_vtail_val,CDo_htail_val,CD_misc_cons)
     #Missing Landing Gear Calculation
     flat_plate_area = CD_lg.flat_plate_area_calc(Piper_Archer_III_data.takeoff_weight,1)
     flat_plate_area = Piper_Archer_III_data.L_gear_flatplate
-    CD_lg_val = CD_lg.cd_lg(flat_plate_area, Piper_Archer_III_data.s_lg_front)/170
-    total_CD_val = CD_lg_val + CD_misc_val + CDi_fus_val + CDi_htail_val + CDi_wing_val + CDo_fus_val + CDo_htail_val + CDo_vtail_val + CDo_wing_val
+    # For landing gear drag
+    cd_lg_back = CDo_nac.CDo_nac(re,m,Piper_Archer_III_data.lg_back_num,
+                                Piper_Archer_III_data.lg_back_l, Piper_Archer_III_data.lg_back_dia,
+                                Piper_Archer_III_data.S_wing,Piper_Archer_III_data.lg_back_maxfront,
+                                Piper_Archer_III_data.lg_back_tnac)
     
+    cd_lg_front = CDo_nac.CDo_nac(re,m,Piper_Archer_III_data.lg_front_num,
+                                Piper_Archer_III_data.lg_front_l, Piper_Archer_III_data.lg_front_dia,
+                                Piper_Archer_III_data.S_wing,Piper_Archer_III_data.lg_front_maxfront,
+                                Piper_Archer_III_data.lg_front_tnac)
+    
+    cd_lg_bpyl = CDo_ply.CDo_ply(Piper_Archer_III_data.back_numpyl, Piper_Archer_III_data.back_pylon_arrangement,
+                                Piper_Archer_III_data.back_wpyl, Piper_Archer_III_data.back_lpyl,re, mach, 
+                                Piper_Archer_III_data.S_wing,Piper_Archer_III_data.takeoff_weight,vinf, density,
+                                Piper_Archer_III_data.back_lpyl, Piper_Archer_III_data.back_lpyl)
+    
+    cd_lg_fpyl = CDo_ply.CDo_ply(Piper_Archer_III_data.front_numpyl, Piper_Archer_III_data.front_pylon_arrangement,
+                                Piper_Archer_III_data.back_wpyl, Piper_Archer_III_data.front_lpyl,re, mach, 
+                                Piper_Archer_III_data.S_wing, Piper_Archer_III_data.takeoff_weight,vinf, density, 
+                                Piper_Archer_III_data.front_lpyl, Piper_Archer_III_data.front_lpyl)
+    
+    CD_lg_val = cd_lg_back + cd_lg_front + cd_lg_bpyl + cd_lg_fpyl
+    CD_lg_val = 0
+    total_CD_val = CD_lg_val + CD_misc_val + CDi_fus_val + CDi_htail_val + CDi_wing_val + CDo_fus_val + CDo_htail_val + CDo_vtail_val + CDo_wing_val
+
     '''
     print(f'CD_lg_val: {CD_lg_val/total_CD_val}')
     print(f'CD_misc_val: {CD_misc_val/total_CD_val}')
@@ -112,7 +136,7 @@ print(f'percent error: {error}')
 '''
 
 # Generate Mach speeds from 0 to 0.6
-mach_values = np.linspace(0, 0.4, 1000)
+mach_values = np.linspace(0, 0.1, 1000)
 errors = []
 
 # Calculate percentage error for each Mach speed
@@ -130,7 +154,7 @@ plt.xlabel('Mach Speed')
 plt.ylabel('Percentage Error (%)')
 plt.grid(True)
 plt.axhline(0, color='r', linestyle='--')  # Add a line at y=0 for reference
-plt.ylim(-10, 10) 
+plt.ylim(-100, 100) 
 plt.legend()
 plt.show()
 

@@ -1,0 +1,47 @@
+Aircraft Test
+#Mach
+0.777
+#IYsym   IZsym   Zsym
+0       0       0.0
+#Sref    Cref    Bref
+84.39   3.53   28.98
+#Xref    Yref    Zref
+7.44     11.37     0.00
+#
+#
+#====================================================================
+SURFACE
+Wing
+#Nchordwise  Cspace   Nspanwise   Sspace
+10    1.0    20    1.0
+#
+YDUPLICATE
+0.0
+#
+ANGLE
+0.0
+
+#-------------------------------------------------------------
+SECTION
+# Xle Yle Zle Chord Ainc Nspan Sspace
+0 0 0 5.68 0 0 0
+AFILE
+/Users/ericchiang/Desktop/airfoils2/nasasc2-0714.dat
+#-------------------------------------------------------------
+SECTION
+# Xle Yle Zle Chord Ainc Nspan Sspace
+2.33 4.77 0 3.36 0 0 0
+AFILE
+/Users/ericchiang/Desktop/airfoils2/nasasc2-0714.dat
+#-------------------------------------------------------------
+SECTION
+# Xle Yle Zle Chord Ainc Nspan Sspace
+6.47 12.7 0 1.42 0 0 0
+AFILE
+/Users/ericchiang/Desktop/airfoils2/nasasc2-0714.dat
+#-------------------------------------------------------------
+SECTION
+# Xle Yle Zle Chord Ainc Nspan Sspace
+8.16 14.49 0 0.462 0 0 0
+AFILE
+/Users/ericchiang/Desktop/airfoils2/nasasc2-0714.dat

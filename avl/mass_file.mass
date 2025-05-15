@@ -1,0 +1,10 @@
+Lunit = 1.0 m
+Munit = 1.0 kg
+Tunit = 1.0 s
+
+g = 9.81
+rho = 0.3031823060548069
+
+# mass x y z Ixx Iyy Izz Ixy Ixz Iyz
+# Placeholder mass item (replace with real aircraft components)
+10.0  0.0  0.0  0.0  0  0  0  0  0  0

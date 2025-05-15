@@ -1,25 +1,46 @@
-import re
-import requests
-import pandas as pd
-from io import StringIO
+import matplotlib.pyplot as plt
 
-# URL of the CSV file
-airfoil_name = 'marske7-il'
-re = 50000
-url = f'http://airfoiltools.com/polar/csv?polar=xf-{airfoil_name}-{re}'
+sections = [{'y': 4.8-4.8, 'x': 11.03-11.03, 'z': 0, 'chord': 5.68},
+            {'y': 9.57-4.8, 'x': 13.36-11.03, 'z': 0, 'chord': 3.36},
+            {'y': 17.5-4.8, 'x': 17.5-11.03, 'z': 0, 'chord': 1.42},
+            {'y': 19.29-4.8, 'x': 19.19-11.03, 'z': 0, 'chord': 0.462}]
 
-# Send GET request
-response = requests.get(url)
+# Leading and trailing edge points
+x_le = [s["x"] for s in sections]
+y_le = [s["y"] for s in sections]
+x_te = [s["x"] + s["chord"] for s in sections]
+y_te = y_le
 
-if response.status_code == 200:
-    # Convert response text into a readable format
-    csv_data = StringIO(response.text)
-    
-    # Read CSV, skipping metadata
-    df = pd.read_csv(csv_data, skiprows=10)
+# 90-degree clockwise rotation: (x, y) → (y, -x)
+rot_x_le = y_le
+rot_y_le = [-x for x in x_le]
+rot_x_te = y_te
+rot_y_te = [-x for x in x_te]
 
-    # Save DataFrame to CSV file
-    filename = f'{airfoil_name}_{re}.csv'
-    df.to_csv(filename, index=False)
-else:
-    print("Failed to download CSV. Status Code:", response.status_code)
+# Combine for filled shape
+x_outline = rot_x_le + rot_x_te[::-1] + [rot_x_le[0]]
+y_outline = rot_y_le + rot_y_te[::-1] + [rot_y_le[0]]
+
+# Determine consistent limits
+all_x = rot_x_le + rot_x_te
+all_y = rot_y_le + rot_y_te
+x_min, x_max = min(all_x), max(all_x)
+y_min, y_max = min(all_y), max(all_y)
+padding_x = (x_max - x_min) * 0.1
+padding_y = (y_max - y_min) * 0.1
+
+# Plot
+fig, ax = plt.subplots()
+ax.fill(x_outline, y_outline, color="skyblue", edgecolor="black", alpha=0.6)
+ax.plot(x_outline, y_outline, "k-")
+
+ax.set_title("Wing Geometry (Right side)")
+ax.set_xlabel("Y (ft)")
+ax.set_ylabel("X (ft)")
+ax.set_aspect("equal")
+ax.set_xlim(x_min - padding_x, x_max + padding_x)
+ax.set_ylim(y_min - padding_y, y_max + padding_y)
+ax.grid(True)
+plt.show()
+
+print(sections)

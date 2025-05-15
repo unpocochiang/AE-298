@@ -111,3 +111,33 @@ Prop_hub_thickness = 0.25 #ft
 #Landing Gear Geometry
 #s_lg_front = 2.5432 #ft2
 s_lg_front = 4.265 #ft2 #new val
+
+#back landing gear
+wheel_height = 1.32
+wheel_width = 0.96
+lg_back_dia = (wheel_height + wheel_width)/2
+lg_back_num = 2
+lg_back_l = 2.9554745207
+lg_back_tnac = 1.09237551605 #this is the distance from the center of the nac to the fuselage/wing.
+lg_back_maxfront = np.pi * (lg_back_dia/2)**2
+
+#front landing gear
+wheel_height = 1.421
+wheel_width = 0.9
+lg_front_dia = (wheel_height + wheel_width)/2
+lg_front_num = 1
+lg_front_l = 2.47
+lg_front_tnac = 1.2 #this is the distance from the center of the nac to the fuselage/wing.
+lg_front_maxfront = np.pi * (lg_front_dia/2)**2
+
+# back landing gear pylon
+back_pylon_arrangement = 0
+back_numpyl = 2
+back_wpyl = 0.6093743281 #ft
+back_lpyl =1.04812067814 #ft
+
+# back landing gear pylon
+front_pylon_arrangement = 0
+front_numpyl = 1
+front_wpyl = 0.4689737973 #ft
+front_lpyl = 0.6028946645 #ft
