@@ -3,7 +3,7 @@ Munit = 1.0 kg
 Tunit = 1.0 s
 
 g = 9.81
-rho = 0.3031823060548069
+rho = 0.8226654074893616
 
 # mass x y z Ixx Iyy Izz Ixy Ixz Iyz
 # Placeholder mass item (replace with real aircraft components)

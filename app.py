@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, jsonify, redirect, url_for, session, make_response
 import ast
+from matplotlib.pylab import SFC64
 import numpy as np
 import matplotlib.pyplot as plt
 import plotly.io as pio
@@ -117,7 +118,6 @@ def calculate():
     altitude_max = float(request.form["altitude_max"])
 
     # Engine and Airfoil Data
-    engine_type = request.form["engine_type"]  # value from dropdown like 'turboprop', 'piston', etc.
     airfoil_name = request.form["airfoil_name"]  # string input like 'NACA 2412'
     
     #Wing Data
@@ -339,11 +339,11 @@ def calculate():
             
 
             # uncomment in the future # change
-            # wing_sections = session["wing_sections"]
-            # alpha, avl_cdi_val[k], e = avl_main.solve_alpha_for_cl(cl_force_val[k], m, wing_sections, density * 515.3788, 9.81) #input for rho and gravity needs to be SI unit 
+            wing_sections = session["wing_sections"]
+            alpha, avl_cdi_val[k], e = avl_main.solve_alpha_for_cl(cl_force_val[k], m, wing_sections, density * 515.3788, 9.81) #input for rho and gravity needs to be SI unit 
             
-            # if alpha is None:
-            #     alpha, avl_cdi_val[k], e = avl_main.solve_alpha_for_cl(cl_val[k], m, wing_sections, density * 515.3788, 9.81) #input for rho and gravity needs to be SI unit 
+            if alpha is None:
+                alpha, avl_cdi_val[k], e = avl_main.solve_alpha_for_cl(cl_val[k], m, wing_sections, density * 515.3788, 9.81) #input for rho and gravity needs to be SI unit 
             
         total_CD_val = np.nan_to_num(total_CD_val, nan=0.0, posinf=1.0, neginf=-1.0).tolist()
         CDo_wing_val = np.nan_to_num(CDo_wing_val, nan=0.0, posinf=1.0, neginf=-1.0).tolist()
@@ -463,7 +463,7 @@ def estimate_range():
     form_data = session.get('form_data', {})
     takeoff_weight = float(form_data["takeoff_weight"])
     plane_type = form_data["engine_category"]
-    engine_type = form_data["engine_type"]
+    sfc = form_data["sfc"]
     altitude, geo_alt, temp, pressure, rho, speed_of_sound, visc = atmosphere_function.AtmosphereFunction(alt)
     s_wing = float(form_data["s_wing"])
     b_wing = float(form_data["b_wing"])
@@ -545,20 +545,20 @@ def estimate_range():
     print(best_cl_cd)
 
     if plane_type == "jet":
-        aircraft_range_optimal = range_endurace.jet_range_calc(best_sqrtcl_cd['cl'], best_sqrtcl_cd['cd'], rho, s_wing, takeoff_weight, fuel_weight, engine_type)
-        aircraft_endurance_optimal = range_endurace.jet_endurance_calc(best_cl_cd['value'], takeoff_weight, fuel_weight, engine_type)
+        aircraft_range_optimal = range_endurace.jet_range_calc(best_sqrtcl_cd['cl'], best_sqrtcl_cd['cd'], rho, s_wing, takeoff_weight, fuel_weight, sfc)
+        aircraft_endurance_optimal = range_endurace.jet_endurance_calc(best_cl_cd['value'], takeoff_weight, fuel_weight, sfc)
     elif plane_type == "prop":
-        aircraft_range = range_endurace.prop_range_calc(velocity, ld, takeoff_weight, fuel_weight, engine_type)
-        aircraft_endurance = range_endurace.prop_endurance_calc(velocity, rho, s_wing, cl, cd, takeoff_weight, fuel_weight, engine_type)
+        aircraft_range = range_endurace.prop_range_calc(velocity, ld, takeoff_weight, fuel_weight, sfc)
+        aircraft_endurance = range_endurace.prop_endurance_calc(velocity, rho, s_wing, cl, cd, takeoff_weight, fuel_weight, sfc)
     print(f'optimal range: {aircraft_range_optimal}')
     print(f'optimal endurance: {aircraft_endurance_optimal}')
     
     if plane_type == "jet":
-        aircraft_range = range_endurace.jet_range_calc(cl, cd, rho, s_wing, takeoff_weight, fuel_weight, engine_type)
-        aircraft_endurance = range_endurace.jet_endurance_calc(ld, takeoff_weight, fuel_weight, engine_type)
+        aircraft_range = range_endurace.jet_range_calc(cl, cd, rho, s_wing, takeoff_weight, fuel_weight, sfc)
+        aircraft_endurance = range_endurace.jet_endurance_calc(ld, takeoff_weight, fuel_weight, sfc)
     elif plane_type == "prop":
-        aircraft_range = range_endurace.prop_range_calc(velocity, ld, takeoff_weight, fuel_weight, engine_type)
-        aircraft_endurance = range_endurace.prop_endurance_calc(velocity, rho, s_wing, cl, cd, takeoff_weight, fuel_weight, engine_type)
+        aircraft_range = range_endurace.prop_range_calc(velocity, ld, takeoff_weight, fuel_weight, sfc)
+        aircraft_endurance = range_endurace.prop_endurance_calc(velocity, rho, s_wing, cl, cd, takeoff_weight, fuel_weight, sfc)
     print(aircraft_range)
     print(aircraft_endurance)
     return jsonify({

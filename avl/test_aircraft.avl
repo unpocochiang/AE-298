@@ -1,12 +1,12 @@
 Aircraft Test
 #Mach
-0.777
+0.250
 #IYsym   IZsym   Zsym
 0       0       0.0
 #Sref    Cref    Bref
-84.39   3.53   28.98
+15.72   1.57   10.26
 #Xref    Yref    Zref
-7.44     11.37     0.00
+1.68     4.75     0.00
 #
 #
 #====================================================================
@@ -24,24 +24,30 @@ ANGLE
 #-------------------------------------------------------------
 SECTION
 # Xle Yle Zle Chord Ainc Nspan Sspace
-0 0 0 5.68 0 0 0
+0 0 0 2.09 0 0 0
 AFILE
-/Users/ericchiang/Desktop/airfoils2/nasasc2-0714.dat
+/Users/ericchiang/Documents/Visual Studio Code/AE-298/avl/airfoils/naca652415.dat
 #-------------------------------------------------------------
 SECTION
 # Xle Yle Zle Chord Ainc Nspan Sspace
-2.33 4.77 0 3.36 0 0 0
+0.48 1.25 0 1.61 0 0 0
 AFILE
-/Users/ericchiang/Desktop/airfoils2/nasasc2-0714.dat
+/Users/ericchiang/Documents/Visual Studio Code/AE-298/avl/airfoils/naca652415.dat
 #-------------------------------------------------------------
 SECTION
 # Xle Yle Zle Chord Ainc Nspan Sspace
-6.47 12.7 0 1.42 0 0 0
+0.48 2.51 0 1.61 0 0 0
 AFILE
-/Users/ericchiang/Desktop/airfoils2/nasasc2-0714.dat
+/Users/ericchiang/Documents/Visual Studio Code/AE-298/avl/airfoils/naca652415.dat
 #-------------------------------------------------------------
 SECTION
 # Xle Yle Zle Chord Ainc Nspan Sspace
-8.16 14.49 0 0.462 0 0 0
+0.66 5.04 0 1.1 0 0 0
 AFILE
-/Users/ericchiang/Desktop/airfoils2/nasasc2-0714.dat
+/Users/ericchiang/Documents/Visual Studio Code/AE-298/avl/airfoils/naca652415.dat
+#-------------------------------------------------------------
+SECTION
+# Xle Yle Zle Chord Ainc Nspan Sspace
+0.7 5.13 0 0.91 0 0 0
+AFILE
+/Users/ericchiang/Documents/Visual Studio Code/AE-298/avl/airfoils/naca652415.dat

@@ -29,6 +29,19 @@
 </head>
 <body>
     <h1>Aircraft Drag Coefficient Calculator</h1>
+
+    <p>
+        This website provides a convenient tool for approximating an aircraft’s drag using empirical methods.
+        By inputting the aircraft's geometry, the tool calculates drag and lift coefficients across various Mach numbers and altitudes.
+        <br><br>
+        To begin, upload your aircraft geometry. Then, input the wing geometry by adding wing sections—where the X and Y coordinates correspond to the leading edge location, with Y being the spanwise direction.
+        After defining the wing sections, click <strong>Populate</strong> to visualize and verify the wing shape. Once the shape appears correct, click <strong>Calculate</strong> to compute the aerodynamic coefficients.
+        <br><br>
+        <strong>Important:</strong> Always click <strong>Populate</strong> first before using <strong>Calculate</strong> to ensure the geometry loads correctly.
+        <br><br>
+        This project was developed under the mentorship of <strong>Dr. Wroblewski</strong>. If you have any questions or encounter issues, please contact <a href="mailto:yutsung2@illinois.edu">yutsung2@illinois.edu</a>.
+    </p>    
+
     <h2>Upload Input (.py) File</h2>
     <form action="{{ url_for('upload_input') }}" method="post" enctype="multipart/form-data">
         <label for="input_file">Select Python File:</label>
@@ -131,7 +144,7 @@
         <input type="number" id="c_tip_h" name="c_tip_h" step="0.01" min="0.01" required value="{{ prefill.c_tip_h if prefill and 'c_tip_h' in prefill else '' }}"><br><br>
         
         <label for="L_c_4_h">Horizontal Stabilizer L_c_4_h (deg):</label>
-        <input type="number" id="L_c_4_h" name="L_c_4_h" step="0.01" min="0.01" required value="{{ prefill.L_c_4_h if prefill and 'L_c_4_h' in prefill else '' }}"><br><br>
+        <input type="number" id="L_c_4_h" name="L_c_4_h" step="0.01" min="0" required value="{{ prefill.L_c_4_h if prefill and 'L_c_4_h' in prefill else '' }}"><br><br>
 
         <label for="tc_max_h">Horizontal Stabilizer Max t/c:</label>
         <input type="number" id="tc_max_h" name="tc_max_h" step="0.01" required value="{{ prefill.tc_max_h if prefill and 'tc_max_h' in prefill else '' }}"><br><br>
@@ -212,22 +225,16 @@
         
         <h2>Engine and Airfoil Info</h2>
 
-        <label for="engine_category">Engine Category:</label>
-        <select id="engine_category" name="engine_category" onchange="updateEngineOptions()" required>
+        <label for="engine_category">Aircraft Type:</label>
+        <select id="engine_category" name="engine_category" required>
             <option value="">-- Select --</option>
             <option value="jet" {{ 'selected' if prefill and prefill.engine_category == 'jet' else '' }}>Jet</option>
             <option value="propeller" {{ 'selected' if prefill and prefill.engine_category == 'propeller' else '' }}>Propeller</option>
         </select><br><br>
-        
-        <label for="engine_type">Engine Type:</label>
-        <select id="engine_type" name="engine_type" required>
-            <option value="">-- Select Engine Type --</option>
-            <option value="turboprop" {{ 'selected' if prefill and prefill.engine_type == 'turboprop' else '' }}>Turboprop</option>
-            <option value="high-bypass-turbofan" {{ 'selected' if prefill and prefill.engine_type == 'high-bypass-turbofan' else '' }}>High-Bypass Turbofan</option>
-            <option value="afterburning-turbofan" {{ 'selected' if prefill and prefill.engine_type == 'afterburning-turbofan' else '' }}>Afterburning Turbofan</option>
-            <option value="piston" {{ 'selected' if prefill and prefill.engine_type == 'piston' else '' }}>Piston</option>
-        </select><br><br>
-        
+
+        <label for="sfc">SFC (Specific Fuel Consumption):</label>
+        <input type="number" step="any" id="sfc" name="sfc" value="{{ prefill.sfc if prefill else '' }}" required><br><br>
+
         <label for="airfoil_name">Airfoil Name (e.g., NACA 2412):</label>
         <input type="text" id="airfoil_name" name="airfoil_name" required value="{{ prefill.airfoil_name if prefill and 'airfoil_name' in prefill else '' }}"><br><br>
         
@@ -309,30 +316,4 @@
         });
     });
 </script>
-
-<script>
-    function updateEngineOptions() {
-        const engineCategory = document.getElementById("engine_category").value;
-        const engineTypeSelect = document.getElementById("engine_type");
-
-        // Clear current options
-        engineTypeSelect.innerHTML = '<option value="">-- Select Engine Type --</option>';
-
-        let options = [];
-
-        if (engineCategory === "jet") {
-            options = ["Turboprop", "High-Bypass Turbofan", "Afterburning Turbofan"];
-        } else if (engineCategory === "propeller") {
-            options = ["Turboprop", "Piston"];
-        }
-
-        options.forEach(type => {
-            const option = document.createElement("option");
-            option.value = type.toLowerCase().replace(/\s+/g, "-");
-            option.text = type;
-            engineTypeSelect.appendChild(option);
-        });
-    }
-</script>
-
 </html>

@@ -11,13 +11,43 @@ sys.path.insert(0, parent_dir)
 # Step 2: Now you can import python_file_1
 import airfoil
 
+def shoelace_area(x, y):
+    """Calculate the area enclosed by a polygon using the Shoelace formula."""
+    if len(x) != len(y):
+        raise ValueError("x and y must be of the same length.")
+    
+    # Number of vertices
+    n = len(x)
+    
+    # Apply the Shoelace formula
+    area = 0.0
+    for i in range(n):
+        j = (i + 1) % n  # Next vertex
+        area += x[i] * y[j] - x[j] * y[i]
+    
+    return abs(area) / 2.0
+
 def compute_sref(sections):
-    area = 0
-    for i in range(len(sections) - 1):
-        dy = abs(sections[i+1]['y'] - sections[i]['y'])
-        chord_avg = 0.5 * (sections[i]['chord'] + sections[i+1]['chord'])
-        area += dy * chord_avg
-    return 2 * area  # Full span (mirror image)
+    # Build the polygon outline: first leading edges (root to tip), then trailing edges (tip to root)
+    x = []
+    y = []
+
+    # Leading edge from root to tip
+    for sec in sections:
+        x.append(sec['x'])
+        y.append(sec['y'])
+
+    # Trailing edge from tip back to root
+    for sec in reversed(sections):
+        x.append(sec['x'] + sec['chord'])
+        y.append(sec['y'])
+    print(x)
+    print(y)
+    # Compute area using shoelace
+    area = shoelace_area(x, y)
+
+    # Double the area to account for both wing halves
+    return 2 * area
 
 def compute_bref(sections):
     return 2 * max(abs(sec['y']) for sec in sections)
@@ -221,6 +251,8 @@ def main(mach, wing_sections, alpha, rho, g):
 
     # If AVL is in your path, this runs it and loads the file
     avl_path = os.path.join(os.path.dirname(__file__), 'avl')
+    # comment for pushing #change
+    # avl_path = os.path.join(os.path.dirname(__file__), 'avl_apple')
 
     cmds = f"""
 LOAD {avl_filename}
@@ -273,6 +305,8 @@ def solve_alpha_for_cl(target_cl, mach, wing_sections, rho, g):
 
     # If AVL is in your path, this runs it and loads the file
     avl_path = os.path.join(os.path.dirname(__file__), 'avl')
+    # comment for pushing #change
+    # avl_path = os.path.join(os.path.dirname(__file__), 'avl_apple')
 
     cmds = f"""
 LOAD {avl_filename}
